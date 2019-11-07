@@ -1,0 +1,11 @@
+source = $(wildcard *.c)
+objects = $(patsubst %.c,%.o,$(source))
+CC = g++
+
+all: $(objects)
+
+%.o: %.cpp
+	$(CC) $< -o $@
+
+clean:
+	rm -f *.o *.exe
