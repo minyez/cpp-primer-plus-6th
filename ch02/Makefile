@@ -4,7 +4,7 @@ CC = g++
 
 all: $(objects)
 
-%.o: %.cpp %.h
+%.o: %.cpp
 	$(CC) $< -o $@
 
 clean:
