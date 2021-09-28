@@ -4,3 +4,5 @@ a.out
 *.swp
 .DS_Store
 .vscode
+
+.envrc
