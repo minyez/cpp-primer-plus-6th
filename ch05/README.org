@@ -1,0 +1,45 @@
+#+title: 第五章 循环和关系表达式
+#+created: [2022-03-05 Sat 14:54]
+
+* 概念
+
+** For loop
+
+#+begin_src cpp
+// C-style
+for (init_expr; test_expr; update_expr)
+    statement
+// Cpp-style, allow declaration
+for (for-init-statement condition; update_expr)
+    statement
+#+end_src
+
+** CS
+
+- 入口条件 (entry-condtion) 循环: 每轮循环前计算测试表达式.
+- 表达式 (expression): 任何值或任何有效的值的运算符的组合. 每个表达式都有值.
+- 表达式语句 (statement): 表达式加上分号. 但语句不一定必须要由表达式构成.
+- 非表达式: 类型声明, 循环. 非表达式没有值.
+- 副作用 (side effect): 计算表达式时对某些东西进行修改. 所有副作用都要确保在顺序点前完成.
+- 顺序点 (sequence point): 程序执行过程中的一个点. 任何完整表达式末尾都是一个顺序点.
+- 完整表达式: 不是另一个更大表达式的子表达式. 例如表达式语句中的表达式 (故语句中的分号必然代表一个顺序点).
+- 语句块: 用花括号包含起来的多条语句, 称为复合语句 (一条语句).
+- 逗号运算符: 将两个表达式放在原本句法只允许放一个表达式的地方. 声明时的 ~i, j, k~ 中的逗号并非逗号运算符.
+
+* Notes
+
+- 用 ~cout.setf(ios_base::boolalpha)~ 命令 ~cout~ 显示 ~true/false~ 而不是 ~1/0~.
+- CPP for 循环中 ~for-init-statement~ 语句内有自己的分号, 使得可在初始化时声明变量.
+  这种变量只存在于循环内 (除非是比较旧的 CPP 实现).
+- 记忆递增/递减运算符的前缀和后缀格式:
+  从右往左看, 前缀格式 ~++a~ 先 a 后加, 表达式值也加.
+  后缀格式 ~a++~ 先加后 a, 表达式值为 a.
+- 对于用户类型, 前缀格式效率更高. 对内置类型不会有差别.
+- 后缀运算符高于指针取值 ~*~. ~*pt++~ 会加指针, 但子表达式 ~pt++~ 值为递增前的 ~pt~, 从而
+  ~*~ 解引用的是递增前 ~pt~ 指向的值.
+- 语句块内可以重新声明并覆盖语句块以外的变量. 离开语句块后, 该变量值会回到先前状态.
+- 逗号表达式的值来自最后一个部分. 比较
+  #+begin_src cpp
+  (cats = 17), 240; // expression 240, cats 17
+  cats = (17, 240); // both cats and expression are 240
+  #+end_src
