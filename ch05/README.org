@@ -31,7 +31,7 @@ do
 while (test_cond);
 #+end_src
 
-** CS
+** Computer science
 
 - 入口条件 (entry-condtion) 循环: 每轮循环前计算测试表达式.
 - 表达式 (expression): 任何值或任何有效的值的运算符的组合. 每个表达式都有值.
@@ -47,8 +47,8 @@ while (test_cond);
 
 #+begin_src cpp
 #include<ctime>
+#include<cstdlib>
 #+end_src
-
 
 * Notes
 
@@ -68,3 +68,12 @@ while (test_cond);
   cats = (17, 240); // both cats and expression are 240
   #+end_src
 - "编写清晰, 容易理解的代码比使用语言的晦涩特性来显示自己的能力更为有用."
+- ~cin << ch~ 在读取 char 时会忽略空格和换行. 需要读取时, 用 ~cin.get(ch)~ 替代.
+- =fg= 继续执行由于 Ctrl-Z 挂起的程序.
+- ~cin.get(ch)~ 与 ~cin.get()~ 的差别
+
+  | 属性                | ~cin.get(ch)~                    | ~ch=cin.get()~      |
+  |---------------------+----------------------------------+---------------------|
+  | 传递输入字符的方式  | 赋给 ch                          | 将函数返回值赋给 ch |
+  | 输入字符时的返回值  | istream 对象 (bool 转换为 true)  | int 类型的字符编码  |
+  | 达到 EOF 时的返回值 | istream 对象 (bool 转换为 false) | EOF                 |
