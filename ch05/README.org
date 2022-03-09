@@ -77,3 +77,18 @@ while (test_cond);
   | 传递输入字符的方式  | 赋给 ch                          | 将函数返回值赋给 ch |
   | 输入字符时的返回值  | istream 对象 (bool 转换为 true)  | int 类型的字符编码  |
   | 达到 EOF 时的返回值 | istream 对象 (bool 转换为 false) | EOF                 |
+
+* 练习
+
+[[file:images/ex01.png][ex01]]
+
+[[file:images/ex02.png][ex02]]
+
+[[file:images/ex03.png][ex03]]
+
+[[file:images/ex04.png][ex04]]
+
+[[file:images/ex05.png][ex05]]
+
+[[file:images/ex06.png][ex06]]
+
