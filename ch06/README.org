@@ -1,0 +1,85 @@
+#+title: 第六章 分支语句和逻辑运算符
+#+created: [2022-03-10 Thu 11:33]
+#+author: Min-Ye Zhang
+
+* 概念
+
+~if~
+#+begin_src cpp
+if (cond_expr1) statement1
+else if (cond_expr2) statement2
+// ...
+else statement3
+#+end_src
+
+条件运算符
+#+begin_src cpp
+cond_expr ? true_expr : false_expr
+#+end_src
+
+~switch~
+#+begin_src cpp
+switch (int_expr) {
+    case label1 : statement1
+    case label2 : statement2
+    // ...
+    default     : statementd // optional
+}
+#+end_src
+
+* 新提到的标准库
+
+#+begin_src cpp
+#include<cctype> // character functions
+std::isalnum(ch);
+std::isalpha(ch);
+std::isspace(ch); // including space and newline
+std::isdigit(ch);
+std::ispunct(ch);
+std::isprint(ch);
+std::islower(ch);
+std::isupper(ch);
+std::tolower(ch);
+std::toupper(ch);
+
+#include<fstream> // file I/O
+#+end_src
+
+* Notes
+- 在判断时使用 ~value == varaible~ 能够有效捕获相等运算误写为赋值的错误
+- 有超过两个 ~if else~ 选项时, 用 ~switch~ 效率更高.
+- ~cin.clear()~ 用以重置 ~cin~ 状态, 但是输入仍在缓冲区等待读入.
+  参考 [[file:example_cingolf.cpp]] 处理非法字符输入.
+- 文件读写方式和 ~cout~ / ~cin~ 几乎完全相同, 只不过需要自己声明 ~ofstream~ 和 ~ifstream~ 对象.
+- 读取文件时处理读取状态: ~ifstream.good()~, ~ifstream.fail()~, ~ifstream.eof()~.
+  fail 包含了 eof 和 mismatch 的情况, 通常放在后面判断.
+
+* 练习
+
+Ex01
+[[file:images/ex01.png]]
+
+Ex02
+[[file:images/ex02.png]]
+
+Ex03
+[[file:images/ex03.png]]
+
+Ex04
+[[file:images/ex04.png]]
+
+Ex05
+[[file:images/ex05.png]]
+
+Ex06
+[[file:images/ex06.png]]
+
+Ex07
+[[file:images/ex07.png]]
+
+Ex08
+[[file:images/ex08.png]]
+
+Ex09
+[[file:images/ex09.png]]
+

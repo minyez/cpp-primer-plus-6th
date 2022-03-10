@@ -5,4 +5,7 @@ a.out
 .DS_Store
 .vscode
 
+*.txt
+!ch06/patrons.txt
+
 .envrc
