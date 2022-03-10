@@ -1,7 +1,7 @@
 
-## 第二章
+# 第二章
 
-### 概念
+## 概念
 
 标记 (token): 一行代码中不可分割的元素, 一般必须用空格或回车将标记分开
 
@@ -18,7 +18,7 @@
 
 字符流 (stream). cin和cout分别是istream和ostream类的实例, 在iostream中定义.
 
-### TIPS
+## TIPS
 
 - `using namespace std`的功能类似于Python中`from std import *`.
   引入`std`名称空间中所有的变量. 它要求使用`#include <iostream>`而不是`iostream.h`.

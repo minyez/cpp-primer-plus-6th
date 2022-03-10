@@ -1,7 +1,7 @@
 
-## 第三章 处理数据
+# 第三章 处理数据
 
-### 概念
+## 概念
 
 C++变量命名规则. 需要注意的是
 
@@ -24,7 +24,7 @@ C++变量命名规则. 需要注意的是
 
 `auto`类型自动推断: 在处理复杂类型时显现出效果.
 
-### TIPS
+## TIPS
 
 - 对于不带`L,LU,UL`等后缀的十六进制或八进制整数,
   将用int, unsigned int long, unsigned long, long long或unsigned long long中能存储该数的最小类型表示.

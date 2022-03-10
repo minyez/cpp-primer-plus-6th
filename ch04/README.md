@@ -1,7 +1,7 @@
 
-## 第四章 复合类型
+# 第四章 复合类型
 
-### 概念
+## 概念
 
 C风格字符串: 以空字符`\0`结尾的字符数组. 在用字符串常量初始化时, 空字符被自动包含. 字符串处理函数根据空字符位置来处理, 而不是数组长度.
 
@@ -36,7 +36,7 @@ char fish[] = "Bubbles"; // 自动计算长度
   不同的是，在 C 中 `int* p1,p2` 将声明一个整形指针 `p1` 和一个整形 `p2`. 而在 C++ 中，由于 `int*` 是一个复合类型，
   两者都会被声明为整形指针。
 
-### 模板类
+## 模板类
 
 `vector`类: 基本上是使用 `new` 创建动态数组的替代品, 自由存储, 堆. 效率比数组稍低.
 
@@ -71,19 +71,26 @@ array<int, 5> ai;
 - 数组名通常解释为数组第一个元素的内存地址.
 - `cout` 将 char 数组/指针/字符串常量解释为字符串第一个字符的地址, 传入后打印该地址字符, 并继续打印直到遇到空字符 `\0`.
 
-### 练习
+## 练习
 
+Ex01
 ![ex01](images/ex01.png)
 
+Ex02
 ![ex02](images/ex02.png)
 
-![ex03 (and ex04)](images/ex03.png)
+Ex03 and 04
+![](images/ex03.png)
 
-![ex05](images/ex05.png)
+Ex05
+![](images/ex05.png)
 
-![ex06 (and ex09)](images/ex06.png)
+Ex06 and 09
+![](images/ex06.png)
 
-![ex07 (and ex08)](images/ex07.png)
+Ex07 and 08
+![](images/ex07.png)
 
-![ex10](images/ex10.png)
+Ex10
+![](images/ex10.png)
 
