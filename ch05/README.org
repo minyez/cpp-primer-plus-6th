@@ -94,3 +94,5 @@ while (test_cond);
 
 Ex07 注意要在读取数字后加一个 ~getchar()~ 来跳过数字后面跟着的 =\n=.
 [[file:images/ex07.png][ex07]]
+
+[[file:images/ex08.png][ex08 (ex09)]]
