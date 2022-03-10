@@ -11,29 +11,32 @@
 using namespace std;
 
 struct car {
-    std::string make;
+    string make;
     int year;
 };
 
 string get_make_v1() {
     char ch;
     string make = "";
-    // getchar will skip a make
     ch = getchar();
     while (ch != '\n') {
         make += ch;
         ch = getchar();
     }
-    // cin >> make; // cannot read multiple words
     return make;
 }
 
 string get_make_v2() {
     char ch[80];
     string make = "";
-    // getchar will skip a make
     cin.getline(ch, 80);
     make = ch;
+    return make;
+}
+
+string get_make_v3() {
+    string make = "";
+    cin >> make; // cannot read multiple words
     return make;
 }
 
@@ -48,6 +51,9 @@ int main(int argc, char** argv) {
         cout << "Car #" << i+1 << ":" << endl;
         cout << "Please enter the make: ";
         getline(cin, cars[i].make);
+        // cars[i].make = get_make_v1(); // also work
+        // cars[i].make = get_make_v2(); // also work
+        // cars[i].make = get_make_v3(); // not work
         cout << "Please enter the year made: ";
         cin >> cars[i].year;
         getchar();
