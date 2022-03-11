@@ -1,0 +1,57 @@
+#+title: 函数 -- C++ 的编程模块
+#+created: [2022-03-11 Fri 11:54]
+#+author: Min-Ye Zhang
+
+* 片段
+
+函数原型 (声明)
+#+begin_src cpp
+typeName funcName(ptype1 para1, ptype2 para2, [...]);
+#+end_src
+
+处理字符串字符的标准方式
+#+begin_src cpp
+const char *str;
+while (*str)
+{
+    statements
+    str++;
+}
+#+end_src
+
+* 概念
+
+* 新提到的标准库
+#+begin_src cpp
+#include<cmath>
+std::atan2(y, x)
+#+end_src
+
+* Notes
+- 为什么需要单独的原型 (声明): 函数可能不在文件中.
+  原型描述了函数到编译器的接口, 使得源代码可以在没有具体实现的情况下编译.
+- 在 C++ 中, 参数 (argument) 表示实参, 参量 (parameter) 表示形参.
+- 交替进行乘除运算的策略可以防止中间结果超出最大浮点数.
+- 用 ~const type ar[]~ 保护不需要修改的数组.
+- 常量指针不能通过指针引用来修改地址存储的值, 但可以改变指向的地址.
+
+  #+begin_src cpp
+  int var = 3;
+  int new = 5;
+  const int *pt = &var;
+  *pt = 4; // not allowed
+  var = 4; // allowed
+  pt = &new; // allowed
+  #+end_src
+
+- 禁止将 ~const~ 地址赋给非 ~const~ 指针, 因此不能将 ~const~ 参数用作函数的非 ~const~ 参量.
+  另一方面, 指针形参也尽可能声明为 ~const~ 指针, 以保护数据及兼容参数输入, 除非有修改数据的需要.
+- OOP 适合自下而上的程序设计.
+- C++ 二维数组与指针的关系: 行优先存储, 即同一行内的元素在内存中是连续存储的.
+  #+begin_src cpp
+  ar[r][c] == *(*(ar + r) + c) // true
+  #+end_src
+  注意这里 ~c~ 对应于连续的 ~type(ar)~ 内存地址.
+  对于高维数组的情形, 可以理解为最右边的指标 "跑得最快".
+
+* 练习
