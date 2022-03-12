@@ -1,5 +1,7 @@
 #+title: <C++ Primer Plus 第六版> 学习笔记
 
+[[https://github.com/minyez/cpp-primer-plus-6th/actions/workflows/ci.yml/badge.svg]]
+
 * TOC
 
 | 章节   | 标题                   |   开始时间 |   结束时间 |
