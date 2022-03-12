@@ -19,6 +19,22 @@ while (*str)
 }
 #+end_src
 
+函数指针
+#+begin_src cpp
+typef func1(typep1 param1, typep2 param2);
+typef func2(typep1 param1, typep2 param2);
+typef (*funcp)(typep1 param1, typep2 param2);
+
+// assignemnt
+// no need to use &func1 as the function name is already its address.
+funcp = func1;
+funcp = func2;
+
+// calling
+(*funcp)(a, b); // alway valid if a and b are correct types
+funcp(a, b); // valid only in C++
+#+end_src
+
 * 概念
 
 * 新提到的标准库
@@ -53,5 +69,21 @@ std::atan2(y, x)
   #+end_src
   注意这里 ~c~ 对应于连续的 ~type(ar)~ 内存地址.
   对于高维数组的情形, 可以理解为最右边的指标 "跑得最快".
+- P245 关于函数指针数组定义的说明.
+  #+begin_src cpp
+  const double * f1(const double ar[], int);
+  const double * f2(const double [], int);
+  const double * f3(const double *, int);
+  const double * (*pa[3]) (const double *, int) = {f1, f2, f3};
+  #+end_src
+  ~[]~ 优先级高于 ~*~, ~*pa[3]~ 是一个三个成员的列表, 成员均为指针.
+  其它部分指出指针指向的内容, 即特征标 (signature) 为 ~(const double *, int)~,
+  返回值为 ~const double *~ 的函数. 一个类似, 返回值为简单的 ~double~ 的做法在 [[file:play_funcp.cpp]].
+- 同页上
+  #+begin_src cpp
+  auto pc = &pa;
+  #+end_src
+  是指向整个函数指针数组的指针, ~pc++~ 会移动 3 个指针的内存.
+- ~auto~ 只能用于单值初始化, 不能用于初始化列表
 
 * 练习
