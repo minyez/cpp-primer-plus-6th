@@ -2,16 +2,16 @@ name: C/C++ CI
 
 on:
   push:
-      branches: [ main ]
+    branches: [ main ]
   pull_request:
-      branches: [ main ]
+    branches: [ main ]
 
 jobs:
   build-and-test:
-      runs-on: ubuntu-latest
-      steps:
-      - uses: actions/checkout@v2
-      - name: install cppunit
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: install cppunit
       run: sudo apt install -y libcppunit-dev
-      - name: make
+    - name: make
       run: make
