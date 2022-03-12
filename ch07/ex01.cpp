@@ -14,12 +14,11 @@ double harmmean(double, double);
 int main(int argc, char** argv) {
 
     double a, b;
-    while (true) {
-        cout << "Enter two number (0 to abort): ";
+    while (cout << "Enter two number (0 to abort): ") {
         // check bad input
-        while(!(cin >> a >> b)) {
+        while (!(cin >> a >> b)) {
             cin.clear();
-            while(cin.get() != '\n') continue;
+            while (cin.get() != '\n') continue;
             cout << "Please re-enter (0 to abort): ";
         }
         if (abs(a) < eps || abs(b) < eps) break;
