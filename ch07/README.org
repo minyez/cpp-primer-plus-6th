@@ -104,3 +104,16 @@ Ex05
 
 Ex06
 [[file:images/ex06.png]]
+
+Ex07
+[[file:images/ex07.png]]
+
+Ex08
+[[file:images/ex08.png]]
+
+Ex09
+[[file:images/ex09.png]]
+
+Ex10
+[[file:images/ex10.png]]
+
