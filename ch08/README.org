@@ -3,19 +3,44 @@
 #+author: Min-Ye Zhang
 
 * 片段
-
 引用变量. 左边的 ~&~ 不是地址运算符, 而是声明一个指向 ~type1~ 类型变量的引用.
 #+begin_src cpp
 type1 var1;
 type1 & ref1 = var1; // must init
 #+end_src
 
+修改和重置 IO 格式化状态。
+~setf~ 返回的是调用设置 *前* 的 format 格式。
+#+begin_src cpp
+ostream os;
+ios_base::fmtflags initial;
+// save initial formatting state
+initial = os.setf(ios_base::fixed);
+// modification to io format
+os.precision(1);
+os.setf(ios::showpoint);
+//restore initial formatting state
+os.setf(initial);
+#+end_src
+
+默认参数。必须在声明时给定。
+#+begin_src cpp
+int harpo(int n, int m=4, int j=5);     //VALID
+int chico(int n, int m=6, int j);       //INVALID
+int groucho(int k=1, int m=2, int n=3); //VALID
+#+end_src
+
 * 概念
 - ~inline~ 内联函数: 类似函数, 但在编译时用函数代码替换函数调用. 通常在声明原型的同时定义.
 - 引用: 已定义变量的别名.
 - 左值: 可被引用的数据对象, 例如变量, 数组元素, 结构成员, 引用和解除引用的指针.
-  非左值包括字面常量, 包含多项的表达式.
-  ~const~ 变量是不可修改的左值.
+  非左值包括字面常量, 包含多项的表达式。
+  ~const~ 变量是不可修改的左值。
+- 右值引用和左值引用：左值引用即前述的引用。右值引用为 C++11 新增，可
+  指向右值，通过 ~&&~ 声明。
+- 继承：将一个类的特性传递给另一个类。
+- 多态：函数有多种形式。重载：存在多个同名函数。两个概念是同一回事。
+- 函数特征标 (function signature): 函数的参数列表。
 
 * 新提到的标准库
 
@@ -27,6 +52,55 @@ type1 & ref1 = var1; // must init
   4. 跳回到保存的指令地址
 - 内联声明最适用于经常被调用的, 执行函数代码本身时间短于处理调用时间的函数片段.
 - 内联与宏的差别: 内联函数参数按值传递, 而宏只是作文本替换.
-- 现代 C++ 中, 只允许在
+- 现代 C++ 中, 只允许在引用参量是常量的情况下创建临时变量（或称匿名变
+  量），否则会报错。此时，当函数调用的参数不是左值（即不可引用），或者
+  与类型 ~const~ 引用类型不匹配时，函数会创建类型正确的匿名变量并传入
+  参数值，同时让参量引用该变量。
+- 尽量将函数的引用参量声明为常量的原因
+  1. 避免修改数据
+  2. 允许同时处理 ~const~ 和非 ~const~ 实参
+  3. 允许函数正确生成并使用临时变量
+- 引用多用于结构体和类这些非内置类型。
+- 返回引用的函数实际上是被引用的变量的别名。返回的引用作为右值，在赋值
+  时效率更高。考虑到返回的引用可用作左值，用返回 ~const~ 引用的方式可
+  以避免返回后被立刻修改。
+- 继承的特征：
+  1. 派生类拥有基类的所有特性（方法、成员）
+  2. 基类引用可以指向派生类，无需做强制类型转换。例如引用 ~ostream&~ 可以
+     指向 ~ofstream~ 对象。
+- 按值、引用、指针传递的指导原则。
+  传递值而不做修改的函数。
+  | 数据特征               | 建议              |
+  |------------------------+-------------------|
+  | 小：内置类型、小型结构 | 传值              |
+  | 数组                   | ~const~ 指针      |
+  | 较大的结构             | ~const~ 指针/引用 |
+  | 类对象                 | ~const~ 引用      |
+  修改数据的函数。不能用传值的方式。
+  | 数据特征 | 建议      |
+  |----------+-----------|
+  | 内置类型 | 指针      |
+  | 数组     | 指针      |
+  | 结构     | 指针/引用 |
+  | 类对象   | 引用      |
+- 重载匹配函数时区分 ~const~ 和非 ~const~ 参量。下面的声明将 ~dribble~
+  重载，常字符数组和字符数组有各自的重载函数。
+  #+begin_src cpp
+  void dribble(char *bits);
+  void dribble(const char *cbits);
+  #+end_src
+- 重载引用参量时，会选择最匹配的。
+  #+begin_src cpp
+  void sink(double &);       // #1, lvalue
+  void sink(const double &); // #2, lvalue or rvalue
+  void sink(double &&);      // #3, rvalue
+
+  double x;
+  const double y;
+  sink(x);   // #1
+  sink(x+y); // #3
+  sink(y);   // #2
+  #+end_src
+- 仅当函数基本上执行相同的任务，只是数据类型不同时，才应使用函数重载。
 
 * 练习

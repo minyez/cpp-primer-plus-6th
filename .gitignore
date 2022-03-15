@@ -9,3 +9,5 @@ a.out
 !ch06/patrons.txt
 
 .envrc
+
+*.dSYM
