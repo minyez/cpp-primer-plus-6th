@@ -47,7 +47,7 @@ array<int, 5> ai;
 ```
 
 
-### TIPS
+## TIPS
 
 - 数组初始化规则: 只有在定义时才能初始化. 但可以下标赋值. C++11允许初始化时省略等号, 空的大括号会使所有元素初始化为0.
 
@@ -94,3 +94,43 @@ Ex07 and 08
 Ex10
 ![](images/ex10.png)
 
+## Trouble shooting
+
+在 CI 上用 `g++` 9 和 10 编译 EX09 时会出现下面的报错.
+
+```
+ex09.cpp: In function ‘int main(int, char**)’:
+ex09.cpp:19:41: error: no match for ‘operator=’ (operand types are ‘CandyBar’ and ‘<brace-enclosed initializer list>’)
+   19 |     snacks[0] = {"Mocha Munch", 2.3, 350};
+      |                                         ^
+ex09.cpp:9:8: note: candidate: ‘constexpr CandyBar& CandyBar::operator=(const CandyBar&)’
+    9 | struct CandyBar {
+      |        ^~~~~~~~
+ex09.cpp:9:8: note:   no known conversion for argument 1 from ‘<brace-enclosed initializer list>’ to ‘const CandyBar&’
+ex09.cpp:9:8: note: candidate: ‘constexpr CandyBar& CandyBar::operator=(CandyBar&&)’
+ex09.cpp:9:8: note:   no known conversion for argument 1 from ‘<brace-enclosed initializer list>’ to ‘CandyBar&&’
+ex09.cpp:20:37: error: no match for ‘operator=’ (operand types are ‘CandyBar’ and ‘<brace-enclosed initializer list>’)
+   20 |     snacks[1] = {"Geligao", 1.1, 400};
+      |                                     ^
+ex09.cpp:9:8: note: candidate: ‘constexpr CandyBar& CandyBar::operator=(const CandyBar&)’
+    9 | struct CandyBar {
+      |        ^~~~~~~~
+ex09.cpp:9:8: note:   no known conversion for argument 1 from ‘<brace-enclosed initializer list>’ to ‘const CandyBar&’
+ex09.cpp:9:8: note: candidate: ‘constexpr CandyBar& CandyBar::operator=(CandyBar&&)’
+ex09.cpp:9:8: note:   no known conversion for argument 1 from ‘<brace-enclosed initializer list>’ to ‘CandyBar&&’
+ex09.cpp:21:38: error: no match for ‘operator=’ (operand types are ‘CandyBar’ and ‘<brace-enclosed initializer list>’)
+   21 |     snacks[2] = {"Haoliyou", 0.4, 120};
+      |                                      ^
+ex09.cpp:9:8: note: candidate: ‘constexpr CandyBar& CandyBar::operator=(const CandyBar&)’
+    9 | struct CandyBar {
+      |        ^~~~~~~~
+ex09.cpp:9:8: note:   no known conversion for argument 1 from ‘<brace-enclosed initializer list>’ to ‘const CandyBar&’
+ex09.cpp:9:8: note: candidate: ‘constexpr CandyBar& CandyBar::operator=(CandyBar&&)’
+ex09.cpp:9:8: note:   no known conversion for argument 1 from ‘<brace-enclosed initializer list>’ to ‘CandyBar&&’
+make[1]: *** [Makefile:8: ex09.o] Error 1
+make: *** [Makefile:8: @ch04] Error 2
+make[1]: Leaving directory '/home/runner/work/cpp-primer-plus-6th/cpp-primer-plus-6th/ch04'
+Error: Process completed with exit code 2.
+```
+
+用 11 在本地 (11.0.1) 和 CI (11.1.0) 上均正常编译通过.
