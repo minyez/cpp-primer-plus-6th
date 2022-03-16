@@ -18,6 +18,10 @@ C++变量命名规则. 需要注意的是
 
 运算符重载: 根据执行运算的变量类型(上下文)来确定运算符含义
 
+标准转换: C++ 基础类型之间的转换, 包括整形提升, 整形转换 (`unsigned`), 浮点转换 (包括提升转换 `float->double`), 浮点整形间转换, 算术转换, 指针转换, 引用转换
+
+整形提升 (integral promotion, bool/char/unsigned char/signed char/short 到 int)
+
 自动类型转换: 计算表达式时, `bool`, 单字符类型和`short`都被转化为`int`, 称为"整型提升"; `wchar_t`转换为足够存储之的`int`, `long`或其无符号版本; 不同类型间算数运算时的转换.
 
 强制类型转换: `(type) var`或`type (var)`进行强制转换输出, 但不改变`var`本身类型.

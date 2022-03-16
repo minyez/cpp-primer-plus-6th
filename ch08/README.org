@@ -30,6 +30,22 @@ int chico(int n, int m=6, int j);       //INVALID
 int groucho(int k=1, int m=2, int n=3); //VALID
 #+end_src
 
+模板: ~template~ 和 ~typename~ 关键词.
+#+begin_src cpp
+template <typename T>
+rettype funcname(T &param1, T &param2)
+{
+    statements
+}
+#+end_src
+显式具体化
+#+begin_src cpp
+template <typename T> rettype funcname(T &param1, T &param2);
+template <> rettype funcname<ST>(ST &st1, ST &st2);
+// ST is a particular type, e.g. class, struct
+#+end_src
+
+
 * 概念
 - ~inline~ 内联函数: 类似函数, 但在编译时用函数代码替换函数调用. 通常在声明原型的同时定义.
 - 引用: 已定义变量的别名.
@@ -41,6 +57,8 @@ int groucho(int k=1, int m=2, int n=3); //VALID
 - 继承：将一个类的特性传递给另一个类。
 - 多态：函数有多种形式。重载：存在多个同名函数。两个概念是同一回事。
 - 函数特征标 (function signature): 函数的参数列表。
+- 模板实例化 (instantiation): (编译器) 使用模板为特定类型生成函数定义, 分隐式实例化和显式实例化.
+- 具体化 (specialization): 包括隐式实例化, 显式实例化和显式具体化.
 
 * 新提到的标准库
 
@@ -102,5 +120,22 @@ int groucho(int k=1, int m=2, int n=3); //VALID
   sink(y);   // #2
   #+end_src
 - 仅当函数基本上执行相同的任务，只是数据类型不同时，才应使用函数重载。
+- 最终代码不包含模板, 只包含由模板生成的实际函数. 常见做法是把模板放在头文件中.
+- 区分显式实例化与显式具体化. 显式实例化可以在程序过程中, 显式具体化不能.
+  显式具体化在 ~template~ 后必须跟 ~<>~. 实例化都是隐式的具体化 (?).
+- 函数版本选择.
+  1. 创建候选函数列表.
+  2. 从候选函数列表创建可行函数列表.
+  3. 确定最佳的可行函数. 有则用, 无则报调用错误.
+  候选函数到可行函数过程中发生的类型转换可能影响匹配顺序. 最佳到最差
+  1. 完全匹配. 若存在多个完全匹配函数, 则遵循原则
+     - 常规函数优先于模板
+     - 非 const 的指针和引用实参优先与非 const 形参匹配. 其它类型会报 ambiguous 错误.
+     - 对于模板, 越具体越优先: 显式具体化的模板函数优于隐式具体化. 使用时执行转换越少, 越具体.
+  2. 提升转换 (整形提升和浮点提升)
+  3. 提升转换外的标准转换
+  4. 用户定义的转换
+
+*N.B.* 跳过了清单 8.14, 模板函数发展和 ~decltype~ 部分.
 
 * 练习
