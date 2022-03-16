@@ -14,6 +14,7 @@ jobs:
     - name: install cpp
       run: |
         sudo apt update -y
-        sudo apt install -y gcc-10 g++-10
+        sudo apt install -y gcc-11 g++-11
+        g++-11 --version
     - name: make
-      run: CXX=g++-10 make
+      run: CXX=g++-11 make
