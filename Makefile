@@ -5,7 +5,7 @@ chapters = $(patsubst %,@%,$(wildcard ch*))
 default: $(chapters)
 
 @ch%:
-	cd $(patsubst @ch%,ch%,$@); make;
+	cd $(patsubst @ch%,ch%,$@); $(MAKE);
 
 clean:
 	rm -f */*.o */*.exe
