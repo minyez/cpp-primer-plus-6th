@@ -9,3 +9,4 @@ default: $(chapters)
 
 clean:
 	rm -f */*.o */*.exe
+	rm -rf */*.dSYM

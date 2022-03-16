@@ -9,3 +9,4 @@ all: $(objects)
 
 clean:
 	rm -f $(objects) $(exes)
+	rm -rf *.dSYM
