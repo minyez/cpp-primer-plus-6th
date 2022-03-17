@@ -39,10 +39,33 @@ p1 = new (buffer1) int; // safe
 p2 = new (buffer2) int; // too small, create -Wplacement-new warning
 #+end_src
 
+名称空间
+#+begin_src cpp :eval never
+namespace myname
+{
+    double d;
+    int i;
+    void func()
+    {
+        // statement
+    }
+    // namespace can be nested
+    namespace secret
+    {
+        char st[10];
+    }
+}
+// alias
+namespace ms = myname::secret;
+use ms;
+cout << st << endl;
+#+end_src
+
 * 新提到的标准库
 #+begin_src cpp :eval never
 #include<new> // placement new
 #+end_src
+
 * 概念
 - 持续性 :: 数据保有内存地址而留在内存中的时间。自动，静态，动态。
 - 作用域 :: 描述名称在文件 (翻译单元) 内的多大范围内可见。
@@ -58,6 +81,13 @@ p2 = new (buffer2) int; // too small, create -Wplacement-new warning
   同一声明中不能用多个说明符。
 - cv-限定符 (cv-qualifier) :: 即 ~const~ 和 ~volatile~. ~volatile~ 表
   明变量的值可能在程序代码外被修改，例如硬件，或其他程序。
+- 声明区域 (declaration region) :: 可进行变量、函数等声明的区域。
+- 潜在作用域 (potential scope) :: 从声明点开始，到声明区域的结尾。潜在
+  作用域比声明区域小，因为变量必须先被声明。
+- 作用域 (scope) :: 变量对程序而言可见的区域。
+- 全局名称空间 (global namespace) :: 文件级声明区域
+- 未限定/限定名称 (unqualified/qualified name) :: 未被名称空间装饰的名
+  称 (~name~) 和被装饰的名称 (~std::name~)
 
 * Notes
 - 头文件通常包含的内容
@@ -68,13 +98,13 @@ p2 = new (buffer2) int; // too small, create -Wplacement-new warning
   - 内联函数
 - 自动变量只在包含它们的函数或代码块中可见
 - 五种变量存储方式
-  |                | 持续性 | 作用域 | 链接性 | 声明方式                 |
-  |----------------+--------+--------+--------+--------------------------|
-  | 自动           | 自动   | 代码块 | 无     | 代码块内                 |
-  | 寄存器         | 自动   | 代码块 | 无     | 代码块内 ~register~      |
-  | 静态，无链接性 | 静态   | 代码块 | 无     | 代码块内 ~static~        |
-  | 静态，内部链接 | 静态   | 文件   | 内部   | 不在任何函数内 ~static~  |
-  | 静态，外部链接 | 静态   | 文件   | 外部   | 不在任何函数内           |
+  |                | 持续性 | 作用域 | 链接性 | 声明方式                |
+  |----------------+--------+--------+--------+-------------------------|
+  | 自动           | 自动   | 代码块 | 无     | 代码块内                |
+  | 寄存器         | 自动   | 代码块 | 无     | 代码块内 ~register~     |
+  | 静态，无链接性 | 静态   | 代码块 | 无     | 代码块内 ~static~       |
+  | 静态，内部链接 | 静态   | 文件   | 内部   | 不在任何函数内 ~static~ |
+  | 静态，外部链接 | 静态   | 文件   | 外部   | 不在任何函数内          |
 - 所有静态变量都会先零初始化。如果用常量赋值，且只需要根据文件内容计算
   表达式，则为常量初始化。如果没有足够信息计算，则使用动态初始化。
 - 防止指针内容和指针地址修改的定义方式
@@ -84,5 +114,25 @@ p2 = new (buffer2) int; // too small, create -Wplacement-new warning
   第一个 ~const~ 防止内容修改，第二个 ~const~ 防止指针指向地址的修改。
 - 将结构成员声明为 ~mutable~, 允许程序对常量结构实例的该成员进行修改。
 - C++ 中 ~const~ 全局变量的链接性为内部，除非加上 ~extern~.
+- 定位 ~new~ 算符左右地址的类型可以不同。定位 ~new~ 不能用 ~delete~ 删
+  除，除非定位 ~new~ 参数是一个常规 ~new~ 分配的内存地址。定位 ~new~
+  是固定的地址，而常规 ~new~ 在堆中。
+- 名称空间可以是全局的，也可以在另一个名称空间中，但不能定义在代码块内。
+  名称空间是开放的。
+- 在大型项目中使用名称空间的一些指导原则
+  - 用已命名的名称空间中声明的变量，而不是外部/静态全局变量
+  - 将标准函数库放在 ~std~ 名称空间内
+  - 不在头文件中使用 ~using~ 编译命令。若一定要用，放在 ~#include~ 后。
 
 * 练习
+Ex01
+[[file:images/ex01.png]]
+
+Ex02
+[[file:images/ex02.png]]
+
+Ex03
+[[file:images/ex03.png]]
+
+Ex04
+[[file:images/ex04.png]]

@@ -1,6 +1,7 @@
 test
 a.out
 *.o
+*.exe
 *.swp
 .DS_Store
 .vscode

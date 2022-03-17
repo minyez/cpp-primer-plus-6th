@@ -1,12 +1,24 @@
-source = $(wildcard *.cpp)
+source = $(wildcard ex*.cpp)
 objects = $(patsubst %.cpp,%.o,$(source))
-exes = $(patsubst %.cpp,%,$(source))
+exes = $(patsubst %.cpp,%.exe,$(source))
 
-all: $(objects)
+all: $(exes)
+
+ex01.exe: ex01.o golf.o
+	$(CXX) $^ -o $@
+
+ex02.exe: ex02.o
+	$(CXX) $^ -o $@
+
+ex03.exe: ex03.o
+	$(CXX) $^ -o $@
+
+ex04.exe: ex04.o sales.o
+	$(CXX) $^ -o $@
 
 %.o: %.cpp
-	$(CXX) $< -o $@
+	$(CXX) $< -c -o $@
 
 clean:
-	rm -f $(objects) $(exes)
+	rm -f *.o *.exe
 	rm -rf *.dSYM
