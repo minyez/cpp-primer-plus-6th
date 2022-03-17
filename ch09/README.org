@@ -1,0 +1,88 @@
+#+title: 内存模型和名称空间
+#+created: [2022-03-17 Thu 09:57]
+#+author: Min-Ye Zhang
+
+* 代码片段
+引用声明，用关键字 ~extern~, 且不作初始化。否则为定义声明，将分配内存空间
+#+begin_src cpp
+// in file1.cpp
+int num = 5;     // definition declaration
+// in file2.cpp
+extern int num;  // reference declaration
+#+end_src
+这和 Fortran 在模块中的做法类似。
+
+输入空行时退出。
+~cin.get~ 在读取空行时返回 ~false~, 从而退出循环。
+#+begin_src cpp :eval never
+while (cout << "Enter a line:\n" && cin.get(input, ArSize))
+{
+    cin.get(next);
+    while (next != '\n') cin.get(next);
+}
+#+end_src
+
+名称查找 (考虑不同语言在编译时采用不同的名称修饰)
+#+begin_src cpp :eval never
+extern "C" void spiff(int);   // use C protocol
+extern void spiff(int);       // use C++
+extern "C++" void spiff(int); // use C++
+#+end_src
+
+定位 (placement) new 运算符
+#+begin_src cpp :eval never
+#include<new>
+char buffer1[50];
+char buffer2[2];
+int *p1, *p2;
+p1 = new (buffer1) int; // safe
+p2 = new (buffer2) int; // too small, create -Wplacement-new warning
+#+end_src
+
+* 新提到的标准库
+#+begin_src cpp :eval never
+#include<new> // placement new
+#+end_src
+* 概念
+- 持续性 :: 数据保有内存地址而留在内存中的时间。自动，静态，动态。
+- 作用域 :: 描述名称在文件 (翻译单元) 内的多大范围内可见。
+- 链接性 :: 描述名称 (name) 在不同文件之间的可见性。
+  - 外部链接性，可在文件之间共享
+  - 内部链接性，可在文件内不同代码块共享
+  - 无链接性，只在函数或代码块内可见
+- 静态初始化 :: 包含零初始化和常量表达式初始化。
+- 作用域解析运算符 :: ~::var~, 使用 ~var~ 的全局版本，不会被局部变量隐
+  藏。
+- 存储说明符 (storage class specifier) :: 包括 ~auto~, ~register~,
+  ~static~, ~extern~, ~thread_local~, ~mutable~. 除 ~thread_local~ 外，
+  同一声明中不能用多个说明符。
+- cv-限定符 (cv-qualifier) :: 即 ~const~ 和 ~volatile~. ~volatile~ 表
+  明变量的值可能在程序代码外被修改，例如硬件，或其他程序。
+
+* Notes
+- 头文件通常包含的内容
+  - 函数原型 (声明)
+  - ~#define~ 和 ~const~ 符号常量
+  - 结构声明，类声明
+  - 模板声明
+  - 内联函数
+- 自动变量只在包含它们的函数或代码块中可见
+- 五种变量存储方式
+  |                | 持续性 | 作用域 | 链接性 | 声明方式                 |
+  |----------------+--------+--------+--------+--------------------------|
+  | 自动           | 自动   | 代码块 | 无     | 代码块内                 |
+  | 寄存器         | 自动   | 代码块 | 无     | 代码块内 ~register~      |
+  | 静态，无链接性 | 静态   | 代码块 | 无     | 代码块内 ~static~        |
+  | 静态，内部链接 | 静态   | 文件   | 内部   | 不在任何函数内 ~static~  |
+  | 静态，外部链接 | 静态   | 文件   | 外部   | 不在任何函数内           |
+- 所有静态变量都会先零初始化。如果用常量赋值，且只需要根据文件内容计算
+  表达式，则为常量初始化。如果没有足够信息计算，则使用动态初始化。
+- 防止指针内容和指针地址修改的定义方式
+  #+begin_src cpp
+  const char * const weekdays[7] = {"Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"};
+  #+end_src
+  第一个 ~const~ 防止内容修改，第二个 ~const~ 防止指针指向地址的修改。
+- 将结构成员声明为 ~mutable~, 允许程序对常量结构实例的该成员进行修改。
+- C++ 中 ~const~ 全局变量的链接性为内部，除非加上 ~extern~.
+
+* 练习
