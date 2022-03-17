@@ -139,3 +139,23 @@ template <> rettype funcname<ST>(ST &st1, ST &st2);
 *N.B.* 跳过了清单 8.14, 模板函数发展和 ~decltype~ 部分.
 
 * 练习
+Ex01
+[[file:images/ex01.png]]
+
+Ex02
+[[file:images/ex02.png]]
+
+Ex03
+[[file:images/ex03.png]]
+
+Ex04
+[[file:images/ex04.png]]
+
+Ex05
+[[file:images/ex05.png]]
+
+Ex06
+[[file:images/ex06.png]]
+
+Ex07
+[[file:images/ex07.png]]
