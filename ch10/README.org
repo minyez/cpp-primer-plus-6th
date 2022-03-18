@@ -119,3 +119,6 @@ Ex02
 
 Ex03
 [[file:images/ex03.png]]
+
+Ex04
+[[file:images/ex04.png]]

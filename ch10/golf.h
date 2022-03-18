@@ -1,4 +1,5 @@
 // used for ex01.cpp
+#pragma once
 const int Len = 40;
 class Golf
 {

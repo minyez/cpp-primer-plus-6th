@@ -1,4 +1,5 @@
 // for ex04
+#pragma once
 namespace SALES
 {
     const int QUARTERS = 4;

@@ -16,6 +16,12 @@ ex03.exe: ex03.o golf.o
 ex04.exe: ex04.o sales.o
 	$(CXX) $^ -o $@
 
+ex05.exe: ex05.o stack.o
+	$(CXX) $^ -o $@
+
+ex06.exe: ex06.o move.o
+	$(CXX) $^ -o $@
+
 %.exe: %.o
 	$(CXX) $^ -o $@
 
