@@ -122,3 +122,12 @@ Ex03
 
 Ex04
 [[file:images/ex04.png]]
+
+Ex05
+[[file:images/ex05.png]]
+
+Ex06
+[[file:images/ex06.png]]
+
+Ex07
+[[file:images/ex07.png]]

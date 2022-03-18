@@ -45,10 +45,10 @@ namespace SALES
         } /* end for (int i = 0; i < QUARTERS; i++) */
         Sales s(sales, QUARTERS);
         for (int i = 0; i < QUARTERS; i++)
-            this->m_sales[i] = s.m_sales[i];
-        this->m_max = s.m_max;
-        this->m_min = s.m_min;
-        this->m_average = s.m_average;
+            m_sales[i] = s.m_sales[i];
+        m_max = s.m_max;
+        m_min = s.m_min;
+        m_average = s.m_average;
     }
     void Sales::showSales() const
     {

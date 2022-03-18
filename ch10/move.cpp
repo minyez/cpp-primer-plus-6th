@@ -26,6 +26,6 @@ Move Move::add(const Move &m) const
 
 void Move::reset(double a, double b)
 {
-    this->x = a;
-    this->y = b;
+    x = a;
+    y = b;
 }

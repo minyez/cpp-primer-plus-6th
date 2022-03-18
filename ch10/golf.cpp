@@ -32,8 +32,8 @@ int Golf::setgolf()
         cin.get(next);
         while (next != '\n') cin.get(next);
         Golf g(fn, hc);
-        std::strcpy(this->fullname, g.fullname);
-        this->handicap = g.handicap;
+        std::strcpy(fullname, g.fullname);
+        handicap = g.handicap;
     }
     return if_entered_name;
 }
