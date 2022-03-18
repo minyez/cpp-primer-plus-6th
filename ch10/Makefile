@@ -25,6 +25,9 @@ ex06.exe: ex06.o move.o
 ex07.exe: ex07.o plorg.o
 	$(CXX) $^ -o $@
 
+ex08.exe: ex08.o list.o
+	$(CXX) $^ -o $@
+
 %.exe: %.o
 	$(CXX) $^ -o $@
 

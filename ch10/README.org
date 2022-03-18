@@ -110,24 +110,27 @@ Enum2 e2 = Enum2::B;
   象共享。
 
 * 练习
-Ex01
+[[file:ex01.cpp][Ex01]]
 #+attr_org: :width 1.0
 [[file:images/ex01.png]]
 
-Ex02
+[[file:ex02.cpp][Ex02]]
 [[file:images/ex02.png]]
 
-Ex03
+[[file:ex03.cpp][Ex03]]
 [[file:images/ex03.png]]
 
-Ex04
+[[file:ex04.cpp][Ex04]]
 [[file:images/ex04.png]]
 
-Ex05
+[[file:ex05.cpp][Ex05]]
 [[file:images/ex05.png]]
 
-Ex06
+[[file:ex06.cpp][Ex06]]
 [[file:images/ex06.png]]
 
-Ex07
+[[file:ex07.cpp][Ex07]]
 [[file:images/ex07.png]]
+
+[[file:ex08.cpp][Ex08]]
+[[file:images/ex08.png]]
