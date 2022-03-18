@@ -8,31 +8,29 @@
 #include "sales.h"
 namespace SALES
 {
-    void setSales(Sales & s, const double ar[], int n)
+    Sales::Sales(const double ar[], int n)
     {
         int count;
+        double total;
         for (count = 0; count < QUARTERS && count < n; count++)
-            s.sales[count] = ar[count];
+            m_sales[count] = ar[count];
         for (int i = count; i < QUARTERS; i++)
-            s.sales[i] = 0;
-        double total, max, min;
-        total = s.max = s.min = s.sales[0];
+            m_sales[i] = 0;
+        total = m_max = m_min = m_sales[0];
         for (int i = 1; i < count; i++)
         {
-            total += s.sales[i];
-            s.max = s.max > s.sales[i] ? s.max : s.sales[i];
-            s.min = s.min < s.sales[i] ? s.min : s.sales[i];
+            total += m_sales[i];
+            m_max = m_max > m_sales[i] ? m_max : m_sales[i];
+            m_min = m_min < m_sales[i] ? m_min : m_sales[i];
         } /* end for (int i = 0; i < QUARTERS; i++) */
         // only entered
-        s.average = total / count;
+        m_average = total / count;
         // all
         // s.average = total / QUARTERS;
     }
-    void setSales(Sales & s)
+    void Sales::setSales()
     {
-        using std::cout;
-        using std::endl;
-        using std::cin;
+        using std::cout, std::endl, std::cin;
         double sales[QUARTERS] = {};
         for (int i = 0; i < QUARTERS; i++)
         {
@@ -45,20 +43,24 @@ namespace SALES
             }
             // while (cin.get() != '\n') continue;
         } /* end for (int i = 0; i < QUARTERS; i++) */
-        setSales(s, sales, QUARTERS);
+        Sales s(sales, QUARTERS);
+        for (int i = 0; i < QUARTERS; i++)
+            this->m_sales[i] = s.m_sales[i];
+        this->m_max = s.m_max;
+        this->m_min = s.m_min;
+        this->m_average = s.m_average;
     }
-    void showSales(const Sales &s)
+    void Sales::showSales() const
     {
-        using std::cout;
-        using std::endl;
+        using std::cout, std::endl;
         cout << "Sales:" << endl;
         for (int i = 0; i < QUARTERS; i++)
         {
-            cout << "  Q" << i+1 << ": " << s.sales[i];
+            cout << "  Q" << i+1 << ": " << m_sales[i];
         } /* end for (int i = 0; i < QUARTERS; i++) */
         cout << endl;
-        cout << "Max: " << s.max << endl;
-        cout << "Min: " << s.min << endl;
-        cout << "Avg: " << s.average << endl;
+        cout << "Max: " << m_max << endl;
+        cout << "Min: " << m_min << endl;
+        cout << "Avg: " << m_average << endl;
     }
 }

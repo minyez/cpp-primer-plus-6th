@@ -1,0 +1,121 @@
+#+title: 对象和类
+#+created: [2022-03-17 Thu 21:22]
+#+author: Min-Ye Zhang
+
+* 代码片段
+类声明
+#+begin_src cpp :eval never
+class MyClass
+{
+    char *implicit;
+    private:
+        char *name_;
+        int index_;
+        double m_val;
+        void func1(void);
+    public:
+        MyClass(char * = "A", int = 1, double = 0.0); // constructor
+        void init(void);
+        void show(void) const; // const member function for const object
+        int get_index(void);
+        void add_val(double);
+        ~MyClass(); // destructor
+    // ...
+};
+#+end_src
+
+类方法定义。通常在另一个文件中，分离接口声明 (抽象) 和实现。
+#+begin_src cpp :eval never
+void MyClass::func1(void)
+{
+    // statements
+}
+void MyClass::addval(double)
+{
+    // statements
+}
+#+end_src
+
+构造函数 (constructor)。方法名同类名，不需要返回值。声明对象时自动调用。
+必须声明为公有。通常在构造函数的类声明中加入默认值，从而允许隐式调用，
+以默认值声明对象。
+#+begin_src cpp :eval never
+// in class declaration
+// {
+//     public:
+//         MyClass(char * = "A", char * = "B", int = 1, double = 0.0); // constructor
+// }
+MyClass::MyClass(char * imp, char * name, int i, double v)
+{
+    strcpy(implicit, imp);
+    strcpy(name_, name);
+    index_ = i;
+    m_val = v;
+    // ...
+}
+
+MyClass mc1; // implict
+MyClass mc2 = MyClass("A", 2, 10.2); // explictit
+MyClass mc2("A", 2, 10.2); // equivalent as above
+#+end_src
+
+析构函数 (destrcutor)。方法名为类名加前缀 ~~~. 根据对象存储类型自动调
+用。
+
+~const~ 成员函数. ~const~ 对象只能调用 ~const~ 成员函数。
+#+begin_src cpp :eval never
+class MyName
+{
+    public:
+        void show(void) const; // const member function
+};
+void MyName::show(void) const
+{
+    // statement
+}
+#+end_src
+
+作用域内枚举。和一般枚举类似，但是将枚举量放置在特定名称空间内。
+#+begin_src cpp :eval never
+enum class Enum1 {A, B, C, D};
+enum struct Enum2 {A, B, C, D};
+Enum1 e1 = Enum1::A;
+Enum2 e2 = Enum2::B;
+#+end_src
+
+* 概念
+- 类 :: 将抽象转换为用户定义类型的工具，将数据表示和操作数据的方法组合
+  成一个整洁的包。
+- 数据隐藏 :: 防止程序直接访问数据。
+- 封装 :: 将实现细节放在一起，并与抽象分开。
+- 抽象数据类型 (abstract data type, ADT) :: 以通用方式描述数据类型，不
+  引入语言和实现细节。
+
+* Notes
+- 采用 OOP 时，需要考虑描述对象所用的数据，以及用户与数据交互所需要的
+  操作。类规范包含两部分
+  1. 类声明：以数据成员描述数据部分，以成员函数（类方法）描述数据处理
+     方式。类方法可以是公开接口，也可以是私有函数。
+  2. 类方法定义。
+- 类对象 (如代码片段中的 ~implicit~) 默认为 ~private~.
+- 定义位于类声明中的类函数将自动成为内联函数。如果在声明外定义但仍希望
+  其成为内联函数，可以在定义前加上 ~inline~, 不需要在声明中加。
+- 析构函数调用时机
+  - 静态存储：程序结束时自动
+  - 自动存储：代码块末尾前自动
+  - 动态存储：调用 ~delete~ 删除时
+- 在类中定义的名称的作用域为整个类，包括类函数定义内。只有在类内可知，
+  在类外不可知，需要通过类名修饰符或者对象来获取。
+- 类中定义常量，要么用枚举类 ~enum{}~, 要么使用 ~static~. 常量为所有对
+  象共享。
+
+* 练习
+Ex01
+#+attr_org: :width 1.0
+[[file:images/ex01.png]]
+
+Ex02
+[[file:images/ex02.png]]
+
+Ex03
+[[file:images/ex03.png]]
