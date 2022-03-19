@@ -2,6 +2,95 @@
 #+creator: Min-Ye Zhang
 
 * 代码片段
+运算符重载
+#+begin_src cpp :eval never
+class Time
+{
+    private:
+        double h;
+        double m;
+    public:
+        Time() { h=0.0; m=0.0; };
+        Time(double hour, double min=0);
+        Time operator+(const Time &) const; // overload +
+        Time operator-(const Time &) const; // overload -
+        Time operator*(int) const; // overload *
+};
+
+// when using
+Time t1, t2, t3, t4;
+t4 = t1 + t2 + t3; // understood as t3 = t1.operator+(t2).operator+(t3);
+#+end_src
+
+友元函数。用 ~friend~ 关键词，常用于反转操作符 (代数运算, ~<<~, etc)
+顺序。友元函数不能用常量限定符。定义时不需要在前面加 ~Class::~ 限定。
+定义为友元的目的是使该函数可以访问私有变量。
+#+begin_src cpp :eval never
+class Time
+{
+    // ...
+    public:
+        // ...
+        friend Time operator*(double, const Time &);
+        friend std::ostream operator<<(std::ostream &, const Time &); // overload <<
+};
+
+// definition, no modifier before operator
+Time operator*(double i, const Time &t) {return Time(t.h*i, t.m*i);} // ver 1
+Time operator*(double i, const Time &t) {return t * i;}              // ver 2, better
+#+end_src
+Ver 2 更好，因为它复用了成员函数。需要修改时，只需改动成员函数
+~operator*~ 定义，而不需要变动友元函数。事实上，这样写时甚至不需要将其
+设为友元函数，因为它并没有访问私有变量。
+
+随机数生成
+#+begin_src cpp :eval never
+#include<cstdlib>
+#include<ctime>
+using namespace std;
+srand(time(0));
+rand(); // an int between 0 and RAND_MAX, same as INT_MAX
+#+end_src
+
+转换函数
+#+begin_src cpp :eval never
+class Time
+{
+    public:
+        // operator typeName(); // cast to type typeName
+        operator double() const; // to double, implicit allowed
+        explicit operator int() const; // explicit cast to int
+}
+#+end_src
+
 * 概念
+- 隐式转换 (implicit typecast) :: 类构造函数用右值创建临时对象，再用逐成员赋值方式将临时对象内
+  容复制到左值。不属于强制类型转换。例如
+  #+begin_src cpp :eval never
+  Time t;
+  t = 1.0; // implicit, t now has h=1.0, m=0.0
+  t = Time(2.0); // explict, t now has h=2.0, m=0.0
+  t = (Time) 2.0; // explict, old form
+  #+end_src
+ 
 * Notes
+- 运算符重载的一些限定
+  - 不能重载标准类型的运算符。
+  - 不能违反原先的句法规则，也不能修改运算符的优先级。
+  - 不能创建新运算符。
+  - 能重载的运算符是有限的，例如基本代数 ~+-*/%^~ 以及它们的原位运算版本，
+    连加连减，代数关系 ~>,>=,==,!=,<,<=~, 逻辑关系 ~&&,||~, 流操作符，
+    ~new,delete~ 和数组版本。
+  - 函数调用算符 ~()~, 赋值算符 ~=~, 下标 ~[]~, 指针防问 ~->~ 也可以重
+    载，但必须以成员函数的方式，不能是友元函数。
+- 如果方法通过计算得到一个新的类对象，则应该考虑使用构造函数来完成，以
+  避免麻烦，并确保新的对象是以正确的方式生成的。
+- 运算符可多次重载，只要使用不同的特证标。
+- 只有接受一个参数的构造函数才能成为转换函数，但可以给第二个和之后的参
+  量默认值，使参量构造函数可用于直接转换。前置 ~explicit~ 关键词以关闭
+  构造函数的隐式转换功能。
+- 尽量不要依赖隐式转换。
+- 非构造函数的转换函数和构造函数一样没有返回类型，它也没有参数，但是必
+  须返回转换后的值。转换函数必须是成员函数。
+
 * 练习
