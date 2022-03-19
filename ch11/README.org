@@ -94,5 +94,5 @@ class Time
   须返回转换后的值。转换函数必须是成员函数。
 
 * 练习
-[[file:ex06.cpp][Ex06]]
-[[file:images/ex06.png]]
+[[file:ex07.cpp][Ex07]]
+[[file:images/ex07.png]]

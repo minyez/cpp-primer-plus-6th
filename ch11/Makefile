@@ -19,7 +19,7 @@ all: $(exes)
 # ex05.exe: ex05.o stack.o
 # 	$(CXX) $^ -o $@
 #
-ex06.exe: ex06.o complex0.o
+ex07.exe: ex07.o complex0.o
 	$(CXX) $^ -o $@
 
 # ex07.exe: ex07.o plorg.o
