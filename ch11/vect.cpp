@@ -18,10 +18,6 @@ using std::endl;
 namespace VECTOR
 {
     const double Rad_to_deg = 45.0 / atan2(1.0, 1.0);
-    void Vector::set_mag() {mag = sqrt(x*x+y*y);}
-    void Vector::set_ang() {ang = x==0.0&&y==0.0 ? 0.0 : atan2(y, x);}
-    void Vector::set_x() {x = mag * cos(ang);}
-    void Vector::set_y() {y = mag * sin(ang);}
     // public
     Vector::Vector(double n1, double n2, Mode form) {reset(n1, n2, form);}
     void Vector::reset(double n1, double n2, Mode form)
@@ -31,22 +27,26 @@ namespace VECTOR
         {
             x = n1;
             y = n2;
-            set_ang();
-            set_mag();
         }
         else if (form == POL)
         {
-            mag = n1;
-            ang = n2;
-            set_x();
-            set_y();
+            x = n1 * cos(n2 / Rad_to_deg );
+            y = n1 * sin(n2 / Rad_to_deg );
         }
         else
         {
             cout << "Invalid 3rd argument -- vector reset to 0" << endl;
-            x = y = mag = ang = 0.0;
+            x = y = 0.0;
             mode = RECT;
         }
+    }
+    double Vector::magval() const
+    {
+        return sqrt(x*x+y*y);
+    }
+    double Vector::angval() const
+    {
+        return atan2(y, x) * Rad_to_deg;
     }
     void Vector::rect_mode() {mode = RECT;}
     void Vector::polar_mode() {mode = POL;}
@@ -81,7 +81,7 @@ namespace VECTOR
         if (v.mode == Vector::RECT)
             os << "(x,y) = (" << v.x << "," << v.y << ")";
         else if (v.mode == Vector::POL)
-            os << "(m,a) = (" << v.mag << "," << v.ang * Rad_to_deg << ")";
+            os << "(m,a) = (" << v.magval() << "," << v.angval() << ")";
         else
             os << "Vector object mode is invalid";
         return os;

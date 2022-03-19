@@ -1,18 +1,18 @@
 source = $(wildcard ex*.cpp play*.cpp)
 objects = $(patsubst %.cpp,%.o,$(source))
-exes = $(patsubst %.cpp,%.exe,$(source))
+exes = $(patsubst %.cpp,%.exe,$(source)) ex02.exe
 
 all: $(exes)
 
 ex01.exe: ex01.o vect.o
 	$(CXX) $^ -o $@
 
-# ex02.exe: ex02.o person.o
-# 	$(CXX) $^ -o $@
-#
-# ex03.exe: ex03.o golf.o
-# 	$(CXX) $^ -o $@
-#
+ex02.exe: ex01.o vect.o
+	$(CXX) $^ -o $@
+
+ex03.exe: ex03.o vect.o
+	$(CXX) $^ -o $@
+
 # ex04.exe: ex04.o sales.o
 # 	$(CXX) $^ -o $@
 #

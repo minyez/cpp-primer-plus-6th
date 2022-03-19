@@ -11,22 +11,18 @@ namespace VECTOR
         private:
             double x;
             double y;
-            double mag;
-            double ang;
             Mode mode;
-            void set_mag();
-            void set_ang();
             void set_x();
             void set_y();
         public:
-            Vector() { x = y = mag = ang = 0.0; mode = RECT;};
+            Vector() { x = y = 0.0; mode = RECT;};
             Vector(double, double, Mode form = RECT);
             void reset(double, double, Mode form = RECT);
             ~Vector() {};
             double xval() const {return x;}
             double yval() const {return y;}
-            double magval() const {return mag;}
-            double angval() const {return ang;}
+            double magval() const;
+            double angval() const;
             void polar_mode();
             void rect_mode();
             // operator overloading

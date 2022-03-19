@@ -94,5 +94,16 @@ class Time
   须返回转换后的值。转换函数必须是成员函数。
 
 * 练习
+[[file:ex01.cpp][Ex01]]
+[[file:images/ex01.png]]
+
+[[file:ex01.cpp][Ex02]]: 主文件就是 =ex01.cpp=
+[[file:images/ex02.png]]
+
+
+[[file:ex03.cpp][Ex03]]
+[[file:images/ex03.png]]
+
+
 [[file:ex07.cpp][Ex07]]
 [[file:images/ex07.png]]
