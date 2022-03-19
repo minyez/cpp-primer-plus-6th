@@ -4,9 +4,9 @@ exes = $(patsubst %.cpp,%.exe,$(source))
 
 all: $(exes)
 
-# ex01.exe: ex01.o bank.o
-# 	$(CXX) $^ -o $@
-#
+ex01.exe: ex01.o vect.o
+	$(CXX) $^ -o $@
+
 # ex02.exe: ex02.o person.o
 # 	$(CXX) $^ -o $@
 #
