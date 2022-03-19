@@ -100,10 +100,17 @@ class Time
 [[file:ex01.cpp][Ex02]]: 主文件就是 =ex01.cpp=
 [[file:images/ex02.png]]
 
-
 [[file:ex03.cpp][Ex03]]
 [[file:images/ex03.png]]
 
+[[file:ex04.cpp][Ex04]]
+[[file:images/ex04.png]]
+
+[[file:ex05.cpp][Ex05]]
+[[file:images/ex05.png]]
+
+[[file:ex06.cpp][Ex06]]
+[[file:images/ex06.png]]
 
 [[file:ex07.cpp][Ex07]]
 [[file:images/ex07.png]]
