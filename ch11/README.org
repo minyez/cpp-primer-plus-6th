@@ -69,8 +69,8 @@ class Time
   #+begin_src cpp :eval never
   Time t;
   t = 1.0; // implicit, t now has h=1.0, m=0.0
-  t = Time(2.0); // explict, t now has h=2.0, m=0.0
-  t = (Time) 2.0; // explict, old form
+  t = Time(2.0); // explict with constructore, t now has h=2.0, m=0.0
+  t = (Time) 2.0; // same above, but an old form
   #+end_src
  
 * Notes
@@ -94,3 +94,5 @@ class Time
   须返回转换后的值。转换函数必须是成员函数。
 
 * 练习
+[[file:ex06.cpp][Ex06]]
+[[file:images/ex06.png]]
