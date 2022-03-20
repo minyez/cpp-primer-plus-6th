@@ -1,0 +1,140 @@
+#+title: 类和动态内存分配
+#+created: [2022-03-20 Sun 12:12]
+#+author: Min-Ye Zhang
+
+* 代码片段
+静态类成员和静态类成员函数。
+#+begin_src cpp :eval never
+class MyClass
+{
+    private:
+        double *array;
+        double scale;
+        static int nmc;
+    public:
+        // ... other methods
+        static int get_nmc() {return nmc};
+};
+// usage
+int nmc = MyClass::get_nmc();
+#+end_src
+
+复制构造函数 (copy constructor)
+#+begin_src cpp :eval never
+// declaration in class
+MyClass(const MyClass &);
+// definition
+MyClass::MyClass(const MyClass & mc)
+{
+    // statements
+}
+// usage
+MyClass mc1; // use default constructor
+MyClass mc2 = mc1; // use copy constructor (possibly assigment)
+MyClass mc3 = MyClass(mc1); // save as above
+MyClass *pmc4 = new MyClass(mc1); // use c.c.
+#+end_src
+
+赋值运算符。返回引用，而不是 ~const~ 引用。
+#+begin_src cpp :eval never
+MyClass & MyClass::operator=(const MyClass & mc)
+{
+    // avoid assigning to itself
+    if(this == &mc) return *this;
+    // delete previous allocated data
+    delete [] array;
+    n = sizeof(mc.array)/sizeof(double);
+    array = new double [n];
+    // deep copy
+    for (int i = 0; i < n; i++)
+        array[i] = mc.array[i];
+    scale = mc.scale;
+    return *this;
+}
+
+// usage
+MyClass mc1, mc2(2.0);
+mc1 = mc2; // assignment
+#+end_src
+
+空指针: C++ 中用关键词 ~nullptr~
+#+begin_src cpp :eval never
+double *oar1, *oar2, *car3,  *ar;
+oar1 = 0;          // 0 as null pointer, C++98
+oar2 = (void *) 0; // strong typecast
+car3 = NULL;       // C macro
+ar = nullptr;      // C++-11 keyword
+#+end_src
+
+嵌套类和嵌套结构声明。可以用来声明类成员
+#+begin_src cpp :eval never
+class Queue
+{
+    private:
+        // struct used only internally
+        struct Node { Item item; struct Node * next; };
+    public:
+        // class can be used outside the class, Queue::Info
+        class Info {/* declarations of class members */};
+    private:
+        Node *front, *rear;
+        int items
+        const int qsize;
+    public:
+        Queue(int);
+};
+#+end_src
+
+成员初始化列表。
+非静态 ~const~ 成员和引用成员只能用这种格式来初始化。
+只有构造函数可以使用这一语法。
+#+begin_src cpp :eval never
+Queue::Queue(int qs) : qsize(qs)
+{
+    front = rear = nullptr;
+    items = 0;
+}
+#+end_src
+* Notes
+- 类静态成员不能在类声明内初始化，因为声明中不分配内存。
+  在类外单独初始化，不需要 ~static~ 关键词。
+  #+begin_src cpp :eval never
+  int MyClass::count = 1;
+  #+end_src
+  ~const~ 整型和枚举型例外。
+- 静态类成员函数不与任何特定对象相关，因此无法通过对象调用，必须通过类
+  名称解析（见片段）。 静态类成员函数只能使用静态类成员。
+- 自动生成的成员函数：默认构造函数，默认析构函数，复制构造函数，赋值运
+  算符，地址运算符，移动构造函数，移动赋值运算符。
+- 每当生成临时对象，函数按值传递，或者结束返回对象，都会调用复制构造函
+  数。为节省时间和空间，应按引用传递。
+- 默认复制构造函数逐个复制非静态成员，复制的是值。因此如果成员本身是一
+  个对象，那么就会调用对应类的复制构造函数。
+- 当类包含指针成员时，应该认真考虑 *显式* 定义复制构造函数和赋值运算符，
+  以避免意外的复制行为。
+- 构造和析构函数的 ~new~ 和 ~delete~, ~new[]~ 和 ~delete[]~ 应当匹配。
+  所有构造函数都应用相同的 ~new~ 来初始化指针，或设为空指针。
+- 赋值运算符注意点 (见代码片段)
+  1. 避免将对象赋给自身。
+  2. 如目标对象已分配数据，则应用 ~delete~ 删除。
+  3. 深复制。
+  4. 函数返回指向调用对象的引用。
+- 用公有接口返回引用的方式可以允许用户修改私有成员的值。
+- 返回指向非 ~const~ 对象的引用的情形：重载赋值运算符和 ~<<~ 流运算符，
+  以允许连续赋值和传递流。后者是因为返回的 ~ostream~ 类没有公有复制构造
+  函数。返回对象的情形：重载算术运算符，以及其他返回类方法内声明的变
+  量的情况。返回 ~const~ 对象的情形：需要禁止类似下述 ~+~ 的重载。
+  #+begin_src cpp :eval never
+  // declaration
+  const Obj operator+(const Obj &);
+  obj1 + obj2 = obj3; // invalid
+  #+end_src
+- 利用定位 new 创建的对象，若其拥有指针成员，则在使用 ~delete~ 删除缓
+  冲区前，最好显式地调用对象的析构函数，以免指针成员分配的内存没有正确
+  释放。以创建顺序的逆序销毁对象，最后再 ~delete~ 释放缓冲区。
+
+* 概念
+- 浅复制 :: 复制指针。
+- 深复制 :: 复制指向的数据。
+
+* 练习
