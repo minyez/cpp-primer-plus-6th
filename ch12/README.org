@@ -149,3 +149,9 @@ C++ 11 允许类内初始化，即在头文件中声明的同时给初值，但�
 
 [[file:ex02.cpp][Ex02]]
 [[file:images/ex02.png]]
+
+[[file:ex03.cpp][Ex03]]
+[[file:images/ex03.png]]
+
+[[file:ex04.cpp][Ex04]]
+[[file:images/ex04.png]]

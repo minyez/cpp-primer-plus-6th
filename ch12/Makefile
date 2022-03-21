@@ -10,12 +10,12 @@ ex01.exe: ex01.o cow.o
 ex02.exe: ex02.o string2.o
 	$(CXX) $^ -o $@
 
-# ex03.exe: ex03.o vect.o
-# 	$(CXX) $^ -o $@
-#
-# ex04.exe: ex04.o mytime.o
-# 	$(CXX) $^ -o $@
-#
+ex03.exe: ex03.o stock.o
+	$(CXX) $^ -o $@
+
+ex04.exe: ex04.o stack.o
+	$(CXX) $^ -o $@
+
 # ex05.exe: ex05.o stonewt.o
 # 	$(CXX) $^ -o $@
 #
