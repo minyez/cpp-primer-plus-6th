@@ -1,0 +1,67 @@
+#+title: 类继承
+#+created: [2022-03-21 Mon 21:42]
+#+author: Min-Ye Zhang
+
+* 代码片段
+从基类继承得到派生类
+#+begin_src cpp :eval never
+// base class, with a double member
+class BaseClass
+{
+    private:
+        double d;
+    public:
+        BaseClass(double);
+        virtual void View();
+};
+BaseClass::BaseClass(double dbc)
+{
+    d = dbc;
+}
+
+class DerivedClass: public BaseClass
+{
+    private:
+        int i;
+        // also have d, but DC cannot directly access
+    public:
+        DerivedClass(int, double); // own constructor
+        virtual void View();
+};
+
+DerivedClass::DerivedClass(int idc, double dbc): BaseClass(dbc)
+{
+    i = idc;
+}
+#+end_src
+
+利用虚方法进行多态继承。在派生类方法中调用基类方法。访问在派生类中被重
+新定义的基类方法时，须加上作用域解析符。
+#+begin_src cpp :eval never
+void BaseClass::View() { std::cout << d; }
+void DerivedClass::View()
+{
+    BaseClass::View();
+    std::cout << " " << i;
+}
+// instead one can overload operator<< to do the same thing.
+#+end_src
+
+* 概念
+- C++ 三类继承模式 :: 公有继承, 保护继承, 私有继承。
+- 虚方法与虚函数 :: 声明中以关键字 ~virtual~ 修饰的方法与函数。
+  根据指针和引用所指向对象的类型调用，而非指针和引用的类型。
+
+* Notes
+- 派生类不能直接访问基类的私有成员，必须通过基类公有方法。
+  故派生类的构造函数必须调用基类的构造函数。
+- 创建派生对象时，会先调用基类构造函数，再调用派生类构造函数。
+  派生对象过期时，会先调用派生类析构函数，再调基类析构函数。
+- 基类指针可以指向派生类，基类引用可以引用派生对象，都不用作显式类型转
+  换。反之不行。
+- 公有继承建立 "is-a" 关系，即派生类对象也是一个基类对象。
+  其余关系不适合采用该继承方案，比如可用类成员方式实现 "has-a".
+- 如要在派生类中重新定义基类方法，应在基类中将其声明为虚方法。
+  为基类声明虚析构函数是一个惯例。
+
+* 练习
