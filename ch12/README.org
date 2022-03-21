@@ -155,3 +155,10 @@ C++ 11 允许类内初始化，即在头文件中声明的同时给初值，但�
 
 [[file:ex04.cpp][Ex04]]
 [[file:images/ex04.png]]
+
+[[file:ex05.cpp][Ex05]]: 模拟时间设置为较长的 10000 小时。此时平均结果
+比较稳定。
+[[file:images/ex05.png]]
+
+[[file:ex06.cpp][Ex06]]: 不确定是否正确。
+[[file:images/ex06.png]]

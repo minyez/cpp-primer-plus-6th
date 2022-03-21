@@ -16,14 +16,11 @@ ex03.exe: ex03.o stock.o
 ex04.exe: ex04.o stack.o
 	$(CXX) $^ -o $@
 
-# ex05.exe: ex05.o stonewt.o
-# 	$(CXX) $^ -o $@
-#
-# ex06.exe: ex06.o stonewt.o
-# 	$(CXX) $^ -o $@
-#
-# ex07.exe: ex07.o complex0.o
-# 	$(CXX) $^ -o $@
+ex05.exe: ex05.o queue.o
+	$(CXX) $^ -o $@
+
+ex06.exe: ex06.o queue.o
+	$(CXX) $^ -o $@
 
 %.exe: %.o
 	$(CXX) $^ -o $@
