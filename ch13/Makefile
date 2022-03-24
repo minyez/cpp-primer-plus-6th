@@ -12,8 +12,8 @@ ex01.exe: ex01.o cd1.o
 ex02.exe: ex02.o cd2.o
 	$(CXX) $^ -o $@ $(CXXFLAGS)
 
-# ex03.exe: ex03.o stock.o
-# 	$(CXX) $^ -o $@
+ex03.exe: ex03.o dma.o
+	$(CXX) $^ -o $@
 
 # ex04.exe: ex04.o stack.o
 # 	$(CXX) $^ -o $@

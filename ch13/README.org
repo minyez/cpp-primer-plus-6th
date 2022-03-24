@@ -151,3 +151,7 @@ public:
 
 [[file:ex02.cpp][Ex02]]: 和 Ex01 相同
 [[file:images/ex02.png]]
+
+[[file:ex03.cpp][Ex03]]: 注意实现基类的复制构造函数。ABC 提供了接口，
+整个头文件和实现看上去比例子更加复杂。
+[[file:images/ex03.png]]
