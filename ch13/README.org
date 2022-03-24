@@ -13,6 +13,9 @@ class BaseClass
     public:
         BaseClass(double);
         virtual void View();
+        virtual ~BaseClass();
+    protected:
+        void set(double); // visible to derived classes
 };
 BaseClass::BaseClass(double dbc)
 {
@@ -47,10 +50,29 @@ void DerivedClass::View()
 // instead one can overload operator<< to do the same thing.
 #+end_src
 
+纯虚函数 (pure virtual function): 声明为 ~virtual ... = 0~. 但可以在实
+现文件中为其定义。
+#+begin_src cpp :eval never
+// declaration
+public:
+    virtual double area() const = 0;
+#+end_src
+
 * 概念
 - C++ 三类继承模式 :: 公有继承, 保护继承, 私有继承。
 - 虚方法与虚函数 :: 声明中以关键字 ~virtual~ 修饰的方法与函数。
   根据指针和引用所指向对象的类型调用，而非指针和引用的类型。
+- 联编 (binding) :: 函数名联编, 将源代码中的函数调用解释为执行特定的函
+  数代码块。
+- 静态联编 (static binding) :: 在编译阶段进行联编。
+  也称早期联编 (early binding)。静态联编效率更高。
+- 动态联编 (dynamic binding) :: 产生特定代码，使得在运行时能够选择正确
+  的虚方法。又称晚期联编 (late binding)
+- 向上强制转换 (upcasting) :: 将 *派生类* 引用或指针转换为 *基类* 引用
+  或指针。向上强制转换允许公有继承不需要显式类型转换。
+- 向下强制转换 (downcasting) :: 将 *基类* 引用或指针转换为 *派生类* 引
+  用或指针。在无显式类型转换下，这一转换是禁止的。
+- 抽象基类 (abstract base class, ABC) :: 至少包含一个纯虚函数的类接口。
 
 * Notes
 - 派生类不能直接访问基类的私有成员，必须通过基类公有方法。
@@ -62,6 +84,46 @@ void DerivedClass::View()
 - 公有继承建立 "is-a" 关系，即派生类对象也是一个基类对象。
   其余关系不适合采用该继承方案，比如可用类成员方式实现 "has-a".
 - 如要在派生类中重新定义基类方法，应在基类中将其声明为虚方法。
-  为基类声明虚析构函数是一个惯例。
+  为基类声明虚析构函数是一个惯例。另一方面，仅将需要重定义的方法声明为
+  虚方法，否则为非虚方法，以利用静态联编的高效。
+- 应为基类提供虚析构函数。只有成员才能是虚函数。
+- 重定义继承方法的两个原则
+  1. 保持方法特征标不变，允许返回类型协变 (covariance of return type):
+     返回类型从基类指针/引用改为派生类指针/引用。
+  2. 若该基类方法有重载，则派生类中需要重新定义所有版本。
+- 对数据成员尽量使用私有访问控制，而非保护访问控制 (~protected~): 通过
+  公有方法修改该成员，则将使其本质上成为公有变量。可对成员函数使用保护
+  访问控制。
+- 派生类和基类 *同时* 含有指针数据成员时的内存管理
+  - 析构函数：会自动调用基类析构函数，派生类析构函数只负责 delete 自身
+    数据成员。
+  - 复制构造函数：在成员初始化列表中调用基类复制构造函数
+    #+begin_src cpp :eval never
+    DerivedClass::DerivedClass(const DerivedClass & dc): BaseClass(dc)
+    {
+        // allocate memory to private pointer members, e.g. a string
+        str = new char [strlen(dc.str)+1];
+        strcpy(str, dc.str);
+    }
+    #+end_src
+  - 赋值运算符：需要显式调用
+    #+begin_src cpp :eval never
+    DerivedClass & DerivedClass::operator=(const DerivedClass & dc)
+    {
+        if(this==&dc) return *this;
+        BaseClass::operator=(dc);
+        delete [] str;
+        return *this;
+    }
+    #+end_src
+- 在派生类中使用基类友元：强制类型转换
+  #+begin_src cpp :eval never
+  ostream & operator<<(ostream & os, const DerivedClass & dc)
+  {
+      os << (const BaseClass &) dc;
+      os << "String: " << str;
+      return os;
+  }
+  #+end_src
 
 * 练习
