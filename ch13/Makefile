@@ -1,14 +1,16 @@
 source = $(wildcard ex*.cpp play*.cpp)
 objects = $(patsubst %.cpp,%.o,$(source))
-exes = $(patsubst %.cpp,%.exe,$(source))
+exes = $(patsubst %.cpp,%.exe,$(source)) ex02.exe
+
+CXXFLAGS = -g -O0 -Wall
 
 all: $(exes)
 
-# ex01.exe: ex01.o cow.o
-# 	$(CXX) $^ -o $@
+ex01.exe: ex01.o cd1.o
+	$(CXX) $^ -o $@ $(CXXFLAGS)
 
-# ex02.exe: ex02.o string2.o
-# 	$(CXX) $^ -o $@
+ex02.exe: ex02.o cd2.o
+	$(CXX) $^ -o $@ $(CXXFLAGS)
 
 # ex03.exe: ex03.o stock.o
 # 	$(CXX) $^ -o $@
@@ -23,10 +25,10 @@ all: $(exes)
 # 	$(CXX) $^ -o $@
 
 %.exe: %.o
-	$(CXX) $^ -o $@
+	$(CXX) $^ -o $@ $(CXXFLAGS)
 
 %.o: %.cpp
-	$(CXX) $< -c -o $@
+	$(CXX) $< -c -o $@ $(CXXFLAGS)
 
 clean:
 	rm -f *.o *.exe
