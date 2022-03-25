@@ -1,0 +1,77 @@
+#+title: C++ 中的代码重用
+#+created: [2022-03-25 Fri 16:36]
+#+author: Min-Ye Zhang
+
+* 代码片段
+多重继承
+#+begin_src cpp :eval never
+class MyClass: public Base1, private Base2
+{
+    // ...
+};
+#+end_src
+
+私有继承
+#+begin_src cpp :eval never
+typedef std::valarray<double> ArrayDb;
+class Student: private std::string, private ArrayDb
+{
+    public:
+        Student(): std::string("Null"), ArrayDb() {}
+        const std::string & Name()
+            { return (const std::string &) *this; }
+        // using to make the valarray method publicly available
+        using ArrayDb::max;
+        using ArrayDb::min;
+};
+#+end_src
+
+保护继承
+#+begin_src cpp :eval never
+class MyClass: protected Base1, protected Base2
+{
+    // ...
+};
+#+end_src
+
+
+* 概念
+- 组合 :: 创建的类包含其他类对象，用于建立 has-a 关系。也称为包含。
+- 多重继承 (multiple inheritance, MI) :: 使用多个基类的继承
+
+* 新提到的标准库
+#+begin_src cpp :eval never
+#include<valarray>
+using namespace std;
+valarray<int> va1; // empty int array
+valarray<int> va2(2); // 2 int
+valarray<double> va3(0.0, 3); // 3 double, set to 0.0
+valarray<int> va4 = {1, 2, 3}; // C++ 11
+
+double gpas[5] = {3.2, 3.3, 4.0, 2.8, 2.1};
+valarray<double> va5(gpas, 4); // init with first 4 of gpas
+#+end_src
+
+* Notes
+- 私有继承时，基类的公有方法将成为派生类的私有方法。
+  使用基类名代替成员名进行初始化，用作用域解析调用基类公有方法。
+  本质上使用了无名称的子对象。
+- 在成员函数中，可用对 this 指针的强制类型转换返回基类对象
+  #+begin_src cpp :eval never
+  // a class, with private inheritance from string
+  return (const string &) *this;
+  #+end_src
+- 对于 has-a 关系，通常应使用包含来表示。如果新类需要访问原有类的保护
+  成员或重新定义虚函数，则应用私有继承。
+- 使用保护继承时，基类公有成员和保护成员成为派生类的保护成员，在派生类
+  中可用。保护继承下，第三代类可以访问基类公有和保护成员，而私有继承不
+  可以，因为它们在派生类中已转为私有成员。
+- 不同继承方式下，成员特征变化的总结
+  | 基类特征       | 公有继承         | 保护继承         | 私有继承         |
+  |----------------+------------------+------------------+------------------|
+  | 公有成员       | 公有             | 保护             | 私有             |
+  | 保护成员       | 保护             | 保护             | 私有             |
+  | 私有成员       | 通过基类接口访问 | 通过基类接口访问 | 通过基类接口访问 |
+  | 隐式向上转换？ | 能               | 能 (派生类内)    | 否               |
+
+* 练习

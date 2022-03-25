@@ -15,7 +15,7 @@ class BaseClass
         virtual void View();
         virtual ~BaseClass();
     protected:
-        void set(double); // visible to derived classes
+        void set(double); // visible to derived classes, but not public
 };
 BaseClass::BaseClass(double dbc)
 {
