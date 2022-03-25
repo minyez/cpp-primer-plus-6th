@@ -15,14 +15,8 @@ ex02.exe: ex02.o cd2.o
 ex03.exe: ex03.o dma.o
 	$(CXX) $^ -o $@
 
-# ex04.exe: ex04.o stack.o
-# 	$(CXX) $^ -o $@
-
-# ex05.exe: ex05.o queue.o
-# 	$(CXX) $^ -o $@
-
-# ex06.exe: ex06.o queue.o
-# 	$(CXX) $^ -o $@
+ex04.exe: ex04.o port.o
+	$(CXX) $^ -o $@
 
 %.exe: %.o
 	$(CXX) $^ -o $@ $(CXXFLAGS)
