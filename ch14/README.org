@@ -34,6 +34,66 @@ class MyClass: protected Base1, protected Base2
 };
 #+end_src
 
+虚基类
+#+begin_src cpp :eval never
+class Worker:
+{
+    public:
+        Worker();
+        Worker(const Worker&);
+};
+
+// order does not matter
+class Waiter: virtual public Worker
+{
+    private: int iw;
+    public:
+        Waiter(const Worker &w, int p): Worker(w), iw(p) {};
+};
+class Singer: public virtual Worker
+{
+    private: int is;
+    public:
+        Waiter(const Worker &w, int v): Worker(w), is(v) {};
+};
+
+class SingerWaiter: public Waiter, public Singer
+{
+    public:
+        // flawed
+        SingerWaiter(const Worker &w, int p, int v): Waiter(w, p), Singer(w, v) {};
+        // correct only for MI with virtual base class
+        SingerWaiter(const Worker &w, int p, int v): Worker(w), Waiter(w, p), Singer(w, v) {};
+};
+#+end_src
+
+模板类。在类外定义时需要加上模板指令，并在模板类后加上类型参数。
+#+begin_src cpp :eval never
+template <typename T>
+class Stack
+{
+    private:
+        T item;
+    public:
+        Stack();
+        Stack(const T &t): item(t) {};
+        bool push(const T &t);
+        bool pop(T &t);
+        Stack & operator=(const Stack & st); // T not required
+}
+
+template <typename T>
+bool Stack<T>::push(const T &t)
+{
+    // ...
+}
+
+template <typename T>
+bool Stack<T>::pop(const T &t)
+{
+    // ...
+}
+#+end_src
 
 * 概念
 - 组合 :: 创建的类包含其他类对象，用于建立 has-a 关系。也称为包含。
@@ -73,5 +133,20 @@ valarray<double> va5(gpas, 4); // init with first 4 of gpas
   | 保护成员       | 保护             | 保护             | 私有             |
   | 私有成员       | 通过基类接口访问 | 通过基类接口访问 | 通过基类接口访问 |
   | 隐式向上转换？ | 能               | 能 (派生类内)    | 否               |
+- 多重继续 (MI) 必须为每一个基类指定 public/private/protected, 否则会
+  使用 private 默认。
+- MI 时，如果继承的两个类派生自同一个基类 (即祖先相同)，那么将派生类对
+  象赋给基类指针时会出现二义性。这种情况，应在一次派生时使用虚基类。
+- 虚基类禁止通过中间类传递信息给基类，因此在构造时需要显式调用虚基类的
+  构造函数 (参见虚基类代码片段)。
+- MI 可能导致函数/方法调用的二义性。解决方式是用作用域解析符显式调用，
+  并基于此重新定义派生类中的同名方法。
+  #+begin_src cpp :eval never
+  void C::show() // C derived from public or protected A and B
+  {
+      A::show();
+      B::show();
+  }
+  #+end_src
 
 * 练习
