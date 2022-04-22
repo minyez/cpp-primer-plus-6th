@@ -3,6 +3,7 @@
 #+author: Min-Ye Zhang
 
 * 代码片段
+** 继承
 多重继承
 #+begin_src cpp :eval never
 class MyClass: public Base1, private Base2
@@ -67,7 +68,8 @@ class SingerWaiter: public Waiter, public Singer
 };
 #+end_src
 
-模板类。在类外定义时需要加上模板指令，并在模板类后加上类型参数。
+** 模板类
+在类外定义时需要加上模板指令，并在模板类后加上类型参数。
 #+begin_src cpp :eval never
 template <typename T>
 class Stack
@@ -94,6 +96,118 @@ bool Stack<T>::pop(const T &t)
     // ...
 }
 #+end_src
+模板参数包括类型参数和非类型参数 (或称表达式参数).
+表达式参数类型可以是整型、枚举、引用或指针。
+
+模板类的具体化
+#+begin_src cpp :eval never
+ArrayTP<int, 100> a1; // implicit instantiation
+template class ArrayTP<int, 100>; // explicit instantiation
+// explicit specialization
+template <> class ArrayTP<const char*, int>
+{
+    // detail code
+}
+#+end_src
+部分具体化
+#+begin_src cpp :eval never
+// general template class
+template <typename T1, typename T2> class ABC {};
+// complete specialization
+template <> class ABC<int, int> {};
+// partial specialization
+template <typename T2> class ABC<int, T2> {};
+#+end_src
+
+嵌套模板 (成员模板)
+#+begin_src cpp :eval never
+template <typename T1>
+class A
+{
+    private:
+        template <typename T2> class B
+        {
+            private:
+                T2 val;
+            public:
+                T2 value() const { return val; }
+        };
+        B<T1> q;
+        B<int> n;
+    public:
+        template <typename U>
+        U blah(U a, T1 v);
+};
+
+template <typename T1>
+    template <typename U>
+    U A<T1>::blah(U a, T1 v)
+    {
+        return a + (U) v * (U) q.value;
+    }
+#+end_src
+
+以模板类为类型参数的模板类，在具体化时需传入匹配模板参数的模板类。
+例如以下 Crab 模板类在具体化时，需要一个单参数模板类，例如上面的 A.
+#+begin_src cpp :eval never
+template <template <typename T> class Thing>
+class Crab
+{
+    private:
+        Thing<int> a;
+        Thing<double> b;
+};
+
+Crab<A> s;
+#+end_src
+
+友元
+#+begin_src cpp :eval never
+template <typename T> void report(T &); // for bound template.
+
+template <typename T>
+class HasFriend
+{
+    private:
+        T val;
+        static int c;
+    public:
+        friend void counts();  // non-template friend.
+        friend void report<>(HasFriend<T> &);  // bound friend.
+        template <typename C> friend void report2(C &, C &);  // non-bound friend.
+};
+
+// initialize static member of template class
+template <typename T>
+int HasFriend<T>::c = 0;
+
+// provide explicit specialization inside friend functions
+void counts()
+{
+    cout << "int count: " << HasFriend<int>::c << endl;
+    cout << "double count: " << HasFriend<double>::c << endl;
+}
+
+template <typename C>
+void report<>(C & hf) // C => HasFriend<T> for any T
+{
+    cout << "Value: " << hf.val << endl;
+}
+
+template <typename C> void report2(C & c1, C & c2) // C => HasFriend<T> for any T
+{
+    cout << "Value: " << c1.val << ", " << c2.val << endl;
+}
+#+end_src
+
+模板类别名 ~using=~. 对于非模板类，同 ~typedef~ 等价。
+#+begin_src cpp :eval never
+template <typename T>
+    using arrtype12 = std::array<T, 12>;
+
+arrtype12<double> da12;
+arrtype12<int> ia12;
+#+end_src
 
 * 概念
 - 组合 :: 创建的类包含其他类对象，用于建立 has-a 关系。也称为包含。
@@ -111,6 +225,24 @@ valarray<int> va4 = {1, 2, 3}; // C++ 11
 double gpas[5] = {3.2, 3.3, 4.0, 2.8, 2.1};
 valarray<double> va5(gpas, 4); // init with first 4 of gpas
 #+end_src
+
+另外还有一个 cstring 函数 ~strchr~
+#+begin_src cpp :results verbatim
+#include <cstring>
+#include <iostream>
+int main() {
+    using std::cout;
+    using std::endl;
+    cout << std::strchr("abcd", 'a') << endl;
+    cout << std::strchr("abcd", 'c') << endl;
+    cout << std::strchr("abcd", 'e') << endl;
+    return 0;
+}
+#+end_src
+
+#+RESULTS:
+: abcd
+: cd
 
 * Notes
 - 私有继承时，基类的公有方法将成为派生类的私有方法。
@@ -133,7 +265,7 @@ valarray<double> va5(gpas, 4); // init with first 4 of gpas
   | 保护成员       | 保护             | 保护             | 私有             |
   | 私有成员       | 通过基类接口访问 | 通过基类接口访问 | 通过基类接口访问 |
   | 隐式向上转换？ | 能               | 能 (派生类内)    | 否               |
-- 多重继续 (MI) 必须为每一个基类指定 public/private/protected, 否则会
+- MI 必须为每一个基类指定 public/private/protected, 否则会
   使用 private 默认。
 - MI 时，如果继承的两个类派生自同一个基类 (即祖先相同)，那么将派生类对
   象赋给基类指针时会出现二义性。这种情况，应在一次派生时使用虚基类。
@@ -148,5 +280,64 @@ valarray<double> va5(gpas, 4); // init with first 4 of gpas
       B::show();
   }
   #+end_src
+- 相比用构造函数控制类成员数组大小，使用模板类表达式参数执行速度更快，
+  特别是使用很多小型数组时。
+  #+begin_src cpp :eval never
+  Stack<int> eggs(12);
+  ArrayTP<double, 12> eggweights;
+  #+end_src
+- 由于实例化模板类将生成独立的类声明，因此不同的表达式参数将生成多个类
+  声明。生成后类内数组长度是固定的。相对的，使用构造函数控制数组大小将
+  允许使用其他成员函数对数组进行释放和再分配，从而使数组大小可变。
+- 有多个模板可供选择时，编译器将使用具体化程度最高的模板。
+- 模板类友元有三类。
+  1. 非模板友元
+  2. 约束模板友元
+  3. 非约束模板友元
+
+  区分办法：非模板友元与普通类的友元函数相同，但是在实现中需要对类作具
+  体化。约束模板友元需要在模板类定义前声明该友元函数的模板，模版类友元
+  实际是该友元函数在模板类模板参数下的具体化。非约束友元在类定义内声明。
+  具体例子见下，并参考代码片段部分。
+  #+begin_src cpp :eval never
+  template <typename C> void report(C &);
+  template <typename T> class HasFriend
+  {
+      // ...
+      friend void counts();  // non-template friend.
+      friend void report<>(HasFriend<T> &);  // bound friend, template argument inferenced from method argument
+      // the full version
+      // friend void report<HasFriend<T>>(HasFriend<T> &);
+      template <typename C> friend void report2(C &, C &);  // non-bound friend.
+  };
+  #+end_src
+- 模板类静态成员初始化与普通的类是相似的，需类型参数 (参考 ch12 Note 1).
+  #+begin_src cpp :eval never
+  // in class A: static int c;
+  template <typename T>
+  int A<T>::c = 0;
+  #+end_src
 
 * 练习
+[[file:ex01.cpp][Ex01]]
+[[file:images/ex01.png]]
+
+[[file:ex02.cpp][Ex02]]: output same as Ex01.
+[[file:images/ex02.png]]
+
+[[file:ex03.cpp][Ex03]]
+[[file:images/ex03_1.png]]
+[[file:images/ex03_2.png]]
+
+[[file:ex04.cpp][Ex04]]
+[[file:images/ex04.png]]
+
+[[file:ex05.cpp][Ex05]]
+[[file:images/ex05.png]]
+~ShowAll~ 和 ~SetAll~ 定义为虚，允许基类指针指向派生类时调用派生类的同
+名方法。
+~highfink~ 派生自 ~manager~ 和 ~fink~, 两者有共同的基类 ~abstr_emp~,
+为避免函数二义性，需要将 ~abstr_emp~ 定义为虚基类。
+~highfink~ 数据在基类中，故不需要自己定义新数据。
+~operator<<~ 统一只打印 ~lname~ 和 ~fname~, 由基类 ~abstr_emp~ 管理。
+替换为 ~abstr_emp tri~ 后将只会使用 ~abstr_emp::ShowAll()~.

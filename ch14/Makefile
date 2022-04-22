@@ -6,17 +6,20 @@ CXXFLAGS = -g -O0 -Wall
 
 all: $(exes)
 
-# ex01.exe: ex01.o cd1.o
-# 	$(CXX) $^ -o $@ $(CXXFLAGS)
+ex01.exe: ex01.o winec.o
+	$(CXX) $^ -o $@ $(CXXFLAGS)
+
+ex02.exe: ex02.o winep.o
+	$(CXX) $^ -o $@ $(CXXFLAGS)
+
+ex03.exe: ex03.o workermi.o
+	$(CXX) $^ -o $@
 #
-# ex02.exe: ex02.o cd2.o
-# 	$(CXX) $^ -o $@ $(CXXFLAGS)
-#
-# ex03.exe: ex03.o dma.o
-# 	$(CXX) $^ -o $@
-#
-# ex04.exe: ex04.o port.o
-# 	$(CXX) $^ -o $@
+ex04.exe: ex04.o person.o
+	$(CXX) $^ -o $@
+
+ex05.exe: ex05.o emp.o
+	$(CXX) $^ -o $@
 
 %.exe: %.o
 	$(CXX) $^ -o $@ $(CXXFLAGS)
