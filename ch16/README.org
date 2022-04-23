@@ -1,0 +1,89 @@
+#+title: String 类和标准库
+#+created: [2022-04-23 Sat 08:07]
+
+* 代码片段
+** ~string~
+构造
+#+begin_src cpp :results value code :wrap src
+#include <iostream>
+#include <string>
+using namespace std;
+
+int main(int argc, char *argv[]) {
+    const char cstr[] = "Learning C++ primer plus";
+    string s1("Hello, World!");
+    string s2(15, '=');
+    string s3(cstr+9, cstr+12); // use template <Iter> (Iter begin, Iter end)
+    string s4(s1, 7, 5);
+    string s5(s1, 7);
+    cout << s1 << endl;
+    cout << s2 << endl;
+    cout << s3 << endl;
+    cout << s4 << endl;
+    cout << s5 << endl;
+    return 0;
+}
+#+end_src
+
+#+RESULTS:
+#+begin_src
+Hello, World!
+===============
+C++
+World
+World!
+#+end_src
+
+输入
+#+begin_src cpp :eval never
+string s;
+cin >> s;
+getline(cin, s);
+getline(cin, s, ':');
+#+end_src
+
+** 智能指针
+#+begin_src cpp :eval never
+#include <memory>
+using std::auto_ptr;
+using std::unique_ptr;
+auto_ptr<double> pd;
+double *pd_reg = new double;
+pd = auto_ptr<double>(pd_reg);
+#+end_src
+
+** 标准模板库 STL
+
+* 新提到的标准库和函数
+#+begin_src cpp :eval never
+for_each(Iterator, Iterator, func-pointer);
+// source in algorithm
+template <class _InputIterator, class _Function>
+inline _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX17
+_Function
+for_each(_InputIterator __first, _InputIterator __last, _Function __f)
+{
+    for (; __first != __last; ++__first)
+        __f(*__first);
+    return __f;
+}
+#+end_src
+
+* 概念
+- NBTS :: null-terminated string
+- 引用计数 (reference counting) :: 引用特定对象的智能指针数
+- 所有权 (ownership) :: 对于特定的对象，只能有一个智能指针对象指向它
+
+* Notes
+- 不要将智能指针指向非堆内存。否则智能指针过期时将 delete 非堆内存，这
+  是错误的。
+- 普通指针到智能指针必须用显式转换。
+- 智能指针 ~auto_ptr~ 可能存在重复 delete 的问题，在容器中禁止使用。
+- 只有用 new 分配内存时，才能用 ~auto_ptr~ 和 ~shared_ptr~.
+  ~unique_ptr~ 可用于 new 和 new[].
+- 允许使用临时 ~unique_ptr~ 去初始化 ~unique_ptr~ 对象，而使用非临时的
+  将是非法的。
+  #+begin_src cpp :eval never
+  unique_ptr<int> pi1 = unique_ptr<int> (new int(5));
+  unique_ptr<int> pi2 = pi1; // invalid
+  #+end_src
