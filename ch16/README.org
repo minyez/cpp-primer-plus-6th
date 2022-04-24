@@ -4,34 +4,13 @@
 * 代码片段
 ** ~string~
 构造
-#+begin_src cpp :results value code :wrap src
-#include <iostream>
-#include <string>
-using namespace std;
-
-int main(int argc, char *argv[]) {
-    const char cstr[] = "Learning C++ primer plus";
-    string s1("Hello, World!");
-    string s2(15, '=');
-    string s3(cstr+9, cstr+12); // use template <Iter> (Iter begin, Iter end)
-    string s4(s1, 7, 5);
-    string s5(s1, 7);
-    cout << s1 << endl;
-    cout << s2 << endl;
-    cout << s3 << endl;
-    cout << s4 << endl;
-    cout << s5 << endl;
-    return 0;
-}
-#+end_src
-
-#+RESULTS:
-#+begin_src
-Hello, World!
-===============
-C++
-World
-World!
+#+begin_src cpp :eval never
+const char cstr[] = "Learning C++ primer plus";
+string s1("Hello, World!");
+string s2(15, '=');
+string s3(cstr+9, cstr+12); // use template <Iter> (Iter begin, Iter end)
+string s4(s1, 7, 5);
+string s5(s1, 7);
 #+end_src
 
 输入
@@ -53,26 +32,41 @@ pd = auto_ptr<double>(pd_reg);
 #+end_src
 
 ** 标准模板库 STL
-
-* 新提到的标准库和函数
+~vector~ 类
 #+begin_src cpp :eval never
-for_each(Iterator, Iterator, func-pointer);
-// source in algorithm
-template <class _InputIterator, class _Function>
-inline _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX17
-_Function
-for_each(_InputIterator __first, _InputIterator __last, _Function __f)
-{
-    for (; __first != __last; ++__first)
-        __f(*__first);
-    return __f;
-}
+vector<int> vi = {1, 2, 3};
+vi.push_back(5);
+#+end_src
+
+容器函数
+#+begin_src cpp :eval never
+#include <algorithm>
+vector<double> vd = {9.2, 2.1, 6, -1.8, 5.5};
+random_shuffle(vd.begin(), vd.end());
+sort(vd.begin(), vd.end());
 #+end_src
 
 * 概念
 - NBTS :: null-terminated string
 - 引用计数 (reference counting) :: 引用特定对象的智能指针数
 - 所有权 (ownership) :: 对于特定的对象，只能有一个智能指针对象指向它
+- 超尾标记 ::
+- 容器 :: 存储其他对象的对象。
+  容器内数据为容器所有，容器过期则非指针数据也将过期。
+  存储对象必须是可复制构造和可赋值的。
+  C++11 STL 有基本容器 15 种，包括 7 种序列容器，4 种关联容器和它们的
+  无序版本
+  - 序列容器 ~deque~, ~forward_list~, ~list~, ~queue~,
+    ~priority_queue~, ~stack~ 和 ~vector~
+  - 关联容器 ~map~, ~multimap~, ~set~ 和 ~multiset~
+  - 无序关联容器 ~unordered_map~, ~unordered_multimap~,
+    ~unordered_set~ 和 ~unordered_multiset~.
+- 函数对象/函数符 (functor) :: 可以以函数方式与 ~()~ 结合的任意对象。
+  包括函数名、函数指针和重载 ~()~ 运算符的类对象。
+- 生成器 (generator) :: 无参数即可调用的函数符
+- N 元函数 :: 需要 N 个参数才可调用的函数符
+- 谓词 (predicate) :: 返回 bool 值的一元函数
+- 二元谓词 (binary predicate) :: 返回 bool 值的二元函数
 
 * Notes
 - 不要将智能指针指向非堆内存。否则智能指针过期时将 delete 非堆内存，这
@@ -86,4 +80,94 @@ for_each(_InputIterator __first, _InputIterator __last, _Function __f)
   #+begin_src cpp :eval never
   unique_ptr<int> pi1 = unique_ptr<int> (new int(5));
   unique_ptr<int> pi2 = pi1; // invalid
+  #+end_src
+- 若需要对元素为自定义对象的容器使用 ~sort~, 自定义对象需要定义
+  ~operator<()~ 函数，或在第三个参数指定作为比较函数的函数指针。
+- 为自定义类区分 ~++~ 运算符的前缀和后缀版本
+  #+begin_src cpp :eval never
+  Class& operator++();   // ++it
+  Class operator++(int); // it++
+  #+end_src
+- 输入迭代器 (从容器到程序) 特征
+  1. 只通过 ~++~ 遍历容器中所有的值
+  2. 单向，可以递增，不能倒退
+  3. 每次遍历的顺序可能不同
+  4. 基于输入迭代器的任何算法应当是单通行的 (single-pass), 不依赖前一
+     次遍历或本次遍历前面的迭代器的值
+- 输出迭代器 (从程序到容器) 特征
+  1. 只用 ~++~
+  2. 能解除引用修改容器值，但不能读取
+  3. 单通行
+- 正向迭代器特征
+  1. 只用 ~++~
+  2. 总按照相同顺序遍历
+  3. 允许对递增前迭代器的值解除引用
+  4. 可读可写
+     #+begin_src cpp :eval never
+     int * pirw;       // read-write
+     const int * pirw; // read only
+     #+end_src
+- 双向迭代器具有正向迭代器的全部特征，同时支持递减运算符。
+- 随机访问迭代器具有双向迭代器的全部特征，同时支持随机访问 (如指针增
+  加)。
+- 迭代器性能总结 (i 为迭代器对象，n 是整型)
+  | 迭代器功能       | 输入 | 输出 | 正向 | 双向 | 随机访问 |
+  |------------------+------+------+------+------+----------|
+  | 解除引用读取     | ✔    |      | ✔    | ✔    | ✔        |
+  | 解除引用写入     |      | ✔    | ✔    | ✔    | ✔        |
+  | 固定和可重复排序 |      |      | ✔    | ✔    | ✔        |
+  | ~++i,i++~        | ✔    | ✔    | ✔    | ✔    | ✔        |
+  | ~--i,i--~        |      |      |      | ✔    | ✔        |
+  | ~i[n]~           |      |      |      |      | ✔        |
+  | ~i+n~            |      |      |      |      | ✔        |
+  | ~i-n~            |      |      |      |      | ✔        |
+  | ~i+=n~           |      |      |      |      | ✔        |
+  | ~i-=n~           |      |      |      |      | ✔        |
+- 序列方法 ~push/pop_back/front~, ~back/front~, ~at~, ~[]~ 均为固定时间复杂度。
+  ~vector~ 没有 ~push_front~, 因为无法以固定时间复杂度实现之。
+- ~array~ 不属于 STL 容器，因为它固定长度。
+- 运算符均为预定义函数符。运算符和函数符之间的对应如下。
+  | 运算符     | 函数符          |
+  |------------+-----------------|
+  | ~+~        | ~plus~          |
+  | ~-~        | ~minus~         |
+  | ~-~        | ~negate~        |
+  | ~*~        | ~multiplies~    |
+  | ~/~        | ~divides~       |
+  | ~%~        | ~modulus~       |
+  | ~==~       | ~equal_to~      |
+  | ~!=~       | ~not_equal_to~  |
+  | ~>~        | ~greater~       |
+  | ~>=~       | ~greater_equal~ |
+  | ~<~        | ~less~          |
+  | ~<=~       | ~less_equal~    |
+  | ~&&~       | ~logical_and~   |
+  | \vert\vert | ~logical_or~    |
+  | ~!~        | ~logical_not~   |
+- 自适应函数携带参数类型和返回类型的 typedef 成员。
+  一元函数包含 ~::result_type~ 和 ~::first_argument_type~.
+  二元函数包含 ~::result_type~, ~::first_argument_type~ 和 ~::second_argument_type~.
+  例如预定义函数符 ~minus~ 的定义
+  #+begin_src cpp :eval never
+  template<typename _Tp>
+  struct plus : public binary_function<_Tp, _Tp, _Tp>
+  {
+    _GLIBCXX14_CONSTEXPR
+    _Tp
+    operator()(const _Tp& __x, const _Tp& __y) const
+    { return __x + __y; }
+  };
+  #+end_src
+  从模板基类 ~binary_function~ 中继承了上述成员
+  #+begin_src cpp :eval never
+  template<typename _Arg1, typename _Arg2, typename _Result>
+  struct binary_function
+  {
+    /// @c first_argument_type is the type of the first argument
+    typedef _Arg1 	first_argument_type;
+    /// @c second_argument_type is the type of the second argument
+    typedef _Arg2 	second_argument_type;
+    /// @c result_type is the return type
+    typedef _Result 	result_type;
+  };
   #+end_src
